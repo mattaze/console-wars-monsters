@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Console Wars HTML basic</title>
+    <style>
+        body {
+            /* font-family: 'Courier New', Courier, monospace */
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: auto auto auto;
+        }
+        .grid-item {
+            border-color: lightblue;
+        }
+
+        .fight-image > img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+        }
+        .fight-image {
+            width: 200px;
+            height: 200px;
+            /* background-color: blue; */
+            border: 2px solid black;
+            box-sizing: border-box;
+        }
+        
+        button > * {
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>Menu item</li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Console Wars HTML basic</h1>
+    
+    <div class="grid-container">
+        <div class="grid-item">
+            <div class="fight-image">
+                <img data-player="image" />
+            </div>
+            <div class="fight-image">
+                <div 
+                style="background: url(images/monsters/ref/all_721_pokemon_sprite_sheet_by_cknightsofni_d8lzsow.png) -1920px 0;
+                width: 80px;
+                height: 80px;"
+                ></div>
+            </div>
+            <div><span data-player="name">Name</span><span>Lvl</span></div>
+            <div>HP <span data-player="hp">current hp</span></div>
+            <div><button data-action="attack"><span>Attack</span></button></div>
+            <div><button>Items</button></div>
+            <div><button>Monsters</button></div>
+            <div><button>Run</button></div>
+        </div>
+        <div>
+            console
+        </div>
+        <div class="grid-item">
+            <div class="fight-image">
+                <img data-enemy="image" />
+            </div>
+            <div><span data-enemy="id"></span></div>
+            <div>HP: <span data-enemy="h"></span> / <span data-enemy="mh"></span></div>
+            <div>Physical Strength: <span data-enemy="pp"></span></div>
+            <div>Elemental Power: <span data-enemy="ep"></span></div>
+            <div>P. Defense: <span data-enemy="pd"></span></div>
+            <div>E. Defense: <span data-enemy="ed"></span></div>
+            <div>Attacks: <span data-enemy="am"></span></div>
+            <div>[type]</div>
+            <div>[??? unknown type ??]</div>
+        </div>
+    </div>
+    
+    
+    <div style="display:none">
+        <template id="series-template">
+            <section>
+                <h1 class="Name"></h1>
+                <ul class="Issues">
+                </ul>
+            </section>
+        </template>
+        <template id="series-issue">
+        </template>
+    </div>
+    
+    <footer>
+        <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Sitemap</a></li>
+        </ul>
+        <h5>a MazeEditing attempt</h5>
+<!--        <img src="facebook-logo.png">
+        <img src="twitter-logo.png">
+        <img src="linkedin-logo.png"> -->
+    </footer>
+
+    <script src="scripts/lib.js"></script>
+    <script src="scripts/console-wars-basic.js?v1"></script>
+
+    <script src="scripts/cw.dom.js"></script>
+    <script src="scripts/cw.battle.js"></script>
+    <script src="scripts/cw.sounds.js"></script>
+    <script src="scripts/cw.monsters.js"></script>
+    <script src="scripts/cw.player.js"></script>
+
+    <script src="scripts/monsters.js"></script>
+</body>
+
+</html>
