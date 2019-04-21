@@ -32,8 +32,9 @@
      * load player data
      */
     self.load = function() {
-        let first_monster = cw.monsters.random();
-        first_monster.name = "Players Bat";
+        let first_monster = cw.monsters.random(1);
+        //first_monster.name = "Players Bat";
+        first_monster.name = first_monster.id;
         self.monsters.push(first_monster);
     };
 

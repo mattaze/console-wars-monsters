@@ -5,36 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Console Wars HTML basic</title>
-    <style>
-        body {
-            /* font-family: 'Courier New', Courier, monospace */
-            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: auto auto auto;
-        }
-        .grid-item {
-            border-color: lightblue;
-        }
-
-        .fight-image > img {
-            max-width: 100%;
-            max-height: 100%;
-            width: 100%;
-        }
-        .fight-image {
-            width: 200px;
-            height: 200px;
-            /* background-color: blue; */
-            border: 2px solid black;
-            box-sizing: border-box;
-        }
-        
-        button > * {
-            pointer-events: none;
-        }
-    </style>
+    <link href="style/cw.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -50,38 +21,64 @@
     
     <div class="grid-container">
         <div class="grid-item">
-            <div class="fight-image">
-                <img data-player="image" />
+            <div class="monster-title">
+                <span data-player="name">Name</span> lvl: <span data-player="l"></span> (<span data-player="xp"></span>)
             </div>
-            <div class="fight-image">
-                <div 
-                style="background: url(images/monsters/ref/all_721_pokemon_sprite_sheet_by_cknightsofni_d8lzsow.png) -1920px 0;
-                width: 80px;
-                height: 80px;"
-                ></div>
+            <div class="fight-image" data-player="image">
             </div>
-            <div><span data-player="name">Name</span><span>Lvl</span></div>
-            <div>HP <span data-player="hp">current hp</span></div>
-            <div><button data-action="attack"><span>Attack</span></button></div>
-            <div><button>Items</button></div>
-            <div><button>Monsters</button></div>
-            <div><button>Run</button></div>
+            <div>HP: <span data-player="h"></span> / <span data-player="mh"></span></div>
+            <div>Energy: <span data-player="e"></span></div>
+            <div>Attacks: <span data-player="am"></span></div>
+            <div>Type: <span data-player="type"></span></div>
+            
+            <div id="battle-menu">
+                
+            </div>
+            
         </div>
-        <div>
-            console
-        </div>
-        <div class="grid-item">
-            <div class="fight-image">
-                <img data-enemy="image" />
+        <div class="grid-item output-container">
+            <div class="zone-info">
+                <h2><span data-zone="zone">Hub</span> ZONE</h2>
+                <h2 data-zone="bool-floor">Floor: <span data-zone="floor">_</span></h2>
+                <h2 data-zone="bool-explored">Explored: <span data-zone="_floor.searches">_</span></h2>
             </div>
-            <div><span data-enemy="id"></span></div>
+            
+            <div id="battle-menu-main" class='output'>
+                <button data-action="menuAttack"><span>Attack</span></button>
+                <button>Items</button>
+                <button>Monsters</button>
+                <button>Run</button>
+            </div>
+            
+            <div id="output" class="output">
+            </div>
+            
+            <div id="message" class="output">
+                
+            </div>
+            
+            <div id="battle-menu-attack" class='output'>
+                
+            </div>
+            <div id="battle-menu-items" class='output'>
+                
+            </div>
+            <div id="action-menu" class='output active'>
+            </div>
+        </div>
+        <div class="grid-item right-column hide">
+            <div class="monster-title">
+                <span data-enemy="id"></span>
+            </div>
+            <div class="fight-image" data-enemy="image">
+            </div>
             <div>HP: <span data-enemy="h"></span> / <span data-enemy="mh"></span></div>
             <div>Physical Strength: <span data-enemy="pp"></span></div>
             <div>Elemental Power: <span data-enemy="ep"></span></div>
             <div>P. Defense: <span data-enemy="pd"></span></div>
             <div>E. Defense: <span data-enemy="ed"></span></div>
             <div>Attacks: <span data-enemy="am"></span></div>
-            <div>[type]</div>
+            <div>Type: <span data-enemy="type"></span></div>
             <div>[??? unknown type ??]</div>
         </div>
     </div>
@@ -105,6 +102,14 @@
             <li><a href="#">About</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Sitemap</a></li>
+            <li>
+                <audio
+                controls
+                src="">
+                    Your browser does not support the
+                    <code>audio</code> element.
+                </audio>
+            </li>
         </ul>
         <h5>a MazeEditing attempt</h5>
 <!--        <img src="facebook-logo.png">
@@ -120,6 +125,8 @@
     <script src="scripts/cw.sounds.js"></script>
     <script src="scripts/cw.monsters.js"></script>
     <script src="scripts/cw.player.js"></script>
+    <script src="scripts/cw.state.js"></script>
+    <script src="scripts/cw.output.js"></script>
 
     <script src="scripts/monsters.js"></script>
 </body>

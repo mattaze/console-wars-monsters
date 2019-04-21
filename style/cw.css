@@ -1,0 +1,142 @@
+body {
+    /* font-family: 'Courier New', Courier, monospace */
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+/* universal */
+.hide {
+    display: none;
+}
+
+/* css grid stuff */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+.grid-item {
+    border-color: lightblue;
+}
+
+.fight-image > img {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    image-rendering: pixelated;
+}
+.fight-image {
+    width: 200px;
+    height: 200px;
+    /* background-color: blue; */
+    border: 2px solid black;
+    box-sizing: border-box;
+}
+.right-column {
+    text-align: right;
+}
+.right-column .fight-image {
+    margin-left: auto;
+}
+
+button > * {
+    pointer-events: none;
+}
+
+.monster-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.output-container {
+    border: 1px lightblue solid;
+    padding: 0 20px;
+}
+
+#output {
+    height: 400px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+#output.active {
+    display: block;
+}
+
+#output .effective {
+    font-style: italic;
+    color: white;
+}
+
+#output .effective.effective-super {
+    background-color: green;
+}
+
+#output .effective.effective-not {
+    background-color: red;
+}
+
+#output .critical {
+    font-weight: bold;
+    background-color: black;
+    color: yellow;
+}
+
+#output .player-text {
+    text-align: left;
+    margin: 0;
+}
+#output .enemy-text {
+    text-align: right;
+    margin: 0;
+}
+
+.sub-menu, .output {
+    display: none;
+}
+.sub-menu.active, .output.active {
+    display: unset;
+}
+.output button{
+    display: block;
+}
+
+.output button {
+    /* color: #444444; */
+    /* background: #F3F3F3; */
+    /* border: 4px #DADADA solid; */
+    /* padding: 5px 10px; */
+    /* border-radius: 2px; */
+    font-weight: bold;
+    font-size: 9pt;
+    /* outline: none; */
+    width:90%;
+    margin: auto;
+    margin-bottom: 2px;
+    height: 44px;
+}
+
+/* blue */
+.output button {
+    /* color: white; */
+    /* background: rgb(11, 94, 228); */
+    /* border: 4px #3079ED solid; */
+    /* box-shadow: inset 0 1px 0 #80B0FB; */
+    font-size: 1.2em;
+}
+
+.output button:hover, .output button:focus {
+    /* border: 4px #2F5BB7 solid; */
+    /* box-shadow: 0 1px 1px #EAEAEA, inset 0 1px 0 #5A94F1; */
+    /* background: #aecdff; */
+    /* color:black; */
+    font-size: 1.4em;
+}
+.output button:active {
+    /* box-shadow: inset 0 2px 5px #2370FE;
+    background: beige;
+    border: 4px #7993c9 solid; */
+}
+.output button:disabled {
+    font-size: 1.2em;
+}
+
+.progress-concept {
+    background: -webkit-linear-gradient(left, red 30%, white 0%);
+}

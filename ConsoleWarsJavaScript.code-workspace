@@ -5,6 +5,28 @@
 		}
 	],
 	"settings": {
-		"jshint.options": {"esversion": 6},
+		"jshint.options": {
+			"esversion": 6
+		},
+		"cSpell.words": [
+			"Abra",
+			"Bulbasaur",
+			"Charmander",
+			"JRPG",
+			"Pikachu",
+			"Pipoya",
+			"Playstation",
+			"cknightsofni",
+			"lzsow",
+			"overworld",
+			"pipo",
+			"reddit",
+			"xbox"
+		],
+	},
+	"liveServer":{
+		"settings": {
+			"ignoreFiles": ["**/*.js"]
+		}
 	}
 }

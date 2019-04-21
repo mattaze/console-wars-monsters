@@ -79,10 +79,59 @@ lib.js.copy = function(obj) {
     return JSON.parse(JSON.stringify(obj));
 };
 
+/**
+ * REPLACED with Object.keys(obj)
+ */
 lib.js.propertiesCount = function(obj) {
-    var count = 0;
-    for(let attribute in obj) {
-        count++;
+    return Object.keys(obj);
+    // var count = 0;
+    // for(let attribute in obj) {
+    //     count++;
+    // }
+    // return count;
+};
+
+/**
+ * get random item in array (or property of object) (because adding to Array.prototype apparently not a good thing to do?)
+ * @param {Object} object or array
+ */
+lib.js.random = function (from_object) {
+    if(Array.isArray(from_object)){
+        return from_object[Math.floor(Math.random() * from_object.length)];
     }
-    return count;
-}
+    else {
+        //object - get random property
+        let keys = Object.keys(from_object);
+        return from_object[keys[Math.floor(Math.random() * keys.length)]];
+    }
+};
+
+
+lib.rand = function(max, min = 0) {
+    return Math.floor(Math.random() * max) + min;
+};
+
+/**
+ * concept function?
+ * text = bracket attribute naming
+ */
+lib.replace = function(text, obj) {
+    //https://stackoverflow.com/questions/1493027/javascript-return-string-between-square-brackets
+    
+    let matches = text.match(/\[(.*?)\]/);
+
+    if (matches) {
+        let match = matches[1];
+    }
+    
+    return text.replace("[name]", obj.name);
+};
+
+lib.func = {};
+lib.func.rp = function(str, obj) {
+    let new_str = str.replace("","");
+    for(let attr in obj) {
+        new_str = new_str.replace(attr, obj[attr]);
+    }
+    return new_str;
+};
