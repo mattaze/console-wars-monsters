@@ -25,7 +25,7 @@
             if(next_action.includes(":")){
                 next_action = next_action.split(":");
                 self.nextAction = next_action[1];
-                return next_action[0]
+                return next_action[0];
             }
             //add as first action
             //self.actionStack.unshift(next_action);
@@ -266,9 +266,9 @@
     };
     self.effectiveMod = function(action) {
         //type check attack vs target
-        let rand = Math.random()
+        let rand = Math.random();
         return rand < 0.2 ? 0.5 : rand < 0.4 ? 2 : 1;
-    }
+    };
     
     /**
      * build the attack object for this monster and move
@@ -377,7 +377,7 @@
     self._runActionNext = "";
     
     self._pText = function(user, text) {
-        return "<p class='" + user + "-text'>" + text + "</p>"
+        return "<p class='" + user + "-text'>" + text + "</p>";
     };
     
     self.energyRecovery = function(monster) {

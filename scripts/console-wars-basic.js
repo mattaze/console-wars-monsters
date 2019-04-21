@@ -255,7 +255,7 @@ function dic (text) {
         state_zone.zone = zone;
         self.system.state.zones[zone] = state_zone;
         return state_zone;
-    }
+    };
     
     self.zone = function (action) {
         //user doing action in zone  
