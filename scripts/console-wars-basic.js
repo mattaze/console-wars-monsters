@@ -69,8 +69,6 @@ var cw = {};
     self.load = function() {
         self.sounds.backgroundMusic(self.sounds.types.music.battle);
        
-        self.player.load();
-        self.dom.update(self.player.monsters[0], "player");
         
         self.menu.load();
         self.actionNow = "menu";
@@ -138,6 +136,15 @@ function dic (text) {
     self.zoneInfo = self.hubInfo;
     
     
+    self.startMenu = [
+        "New Game",
+        "Load Game"
+    ];
+    self.loadMenu = [
+        "Game 1",
+        "Game 2",
+        "Game 3"
+    ]
     //self.zones = [{ps: "Playstation"}];
     self.hubMenu = [
         "Nintendo",
@@ -198,8 +205,8 @@ function dic (text) {
         self._loaded = true;
         
         //show hub
-        self.setDisplay(self.hubMenu);
-        self.system.dom.update(self.zoneInfo, "zone");
+        //self.setDisplay(self.hubMenu);
+        self.setDisplay(self.startMenu);
         self.nextAction = "hub";
         return "hub";
     };
@@ -216,6 +223,24 @@ function dic (text) {
         cw.dom.setDisplay("action-menu");
     };
     
+    self.startGame = function(type){
+        type = type.replace(" ", "");
+        if(self["start" + type]) {
+            return self["start" + type]();
+        }
+    };
+    self.startNewGame = function() {
+        cw.player.load();
+        cw.dom.update(cw.player.monsters[0], "player");
+        
+        self.setDisplay(self.hubMenu);
+        self.system.dom.update(self.zoneInfo, "zone");
+        return "hub";
+    };
+    self.startLoadGame = function() {
+        
+    };
+    
     //pick zone on the HUB menu
     self.hub = function(zone) {
         if(!zone) {
@@ -225,7 +250,9 @@ function dic (text) {
         if(zone == "Monsters" || zone == "Items") {
             return;
         }
-        
+        if(self.startMenu.indexOf(zone) >= 0) {
+            return self.startGame(zone);
+        }
         //get zone:
         self.zoneInfo = self.getZone(zone);
         

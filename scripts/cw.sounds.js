@@ -27,6 +27,7 @@
     };
     
     self.backgroundMusic = function(url) {
+        return;
         // self.background = new Audio(url);
         // self.background.loop = true;
         // self.background.play();
@@ -55,6 +56,7 @@
     };
 
     self.play = function(url) {
+        return;
         new Audio(url).play();
     };
 
