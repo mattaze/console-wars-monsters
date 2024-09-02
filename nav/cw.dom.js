@@ -1,3 +1,5 @@
+var cw = {};
+
 /**
  * DOM management javascript
  */
@@ -11,7 +13,7 @@
     s.elms = {
         message: "message",
         output: "output",
-        button: "<button data-action='@a' @d>@t</button>"
+        button: "<button data-action='@a'>@t</button>"
     };
     
 
@@ -22,14 +24,13 @@
     self.clickEvent = function(event) {
         if(event.target.nodeName == 'BUTTON') {
             let action = event.target.dataset.action;
-            let menu = event.target.dataset.menu;
             
             //using textContent saved having dataset item.
             //however for alt-languages - dataset useful for code and leave display text flexible.
             //let value = event.target.dataset.value;
             //let value = event.target.textContent;
             
-            self.system.next(action, menu);
+            self.system.next(action);
 
             // let action_function = self.system[self.system.mode][action];
             // if(action_function) {
@@ -42,7 +43,7 @@
             self.system.next();
         }
     };
-    window.addEventListener("click", self.clickEvent, false);
+    //window.addEventListener("click", self.clickEvent, false);
 
     /**
      * update DOM
@@ -196,30 +197,18 @@
             console.error("setMenu not found id: " + id);
             return;
         }
-        let buttons = array.reduce(self.func.reduceButtonsAdv, "");
+        let buttons = array.reduce(self.func.reduceButtons, "");
         elm.innerHTML = buttons;
     };
     
     
     
     self.func ={};
-
-    //reduceButtons replaceable by reduceButtonsAdv which handles string array and mixed object
     self.func.reduceButtons = (total, current) => 
         total + self.func.rp(self.elms.button, {'@a': current, '@t': dic(current)});
     
-    self.func.reduceButtonsAdv = (total, current) => 
-        total + self.func.rp(self.elms.button, typeof current == "string" ?
-            {'@a': current, '@t': dic(current), '@d': ""} :
-            {
-                '@a': current.id, 
-                '@t': dic(current.t || current.id),
-                '@d': current.d ? "disabled" : ""
-            }
-        );
-
     /**
-     * short hand replace key value pairs in obj in the str
+     * short hand replace key value paris in obj in the str
      * @param {string} str
      * @param {object} obj
      */

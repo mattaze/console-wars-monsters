@@ -94,7 +94,7 @@
      * start battle
      */
     self.load = function(zone_info) {
-        self._player = cw.player.monsters[0];
+        self._player = cw.state.player.monsters[0];
         if(zone_info) {
             self.zoneInfo = zone_info || {};
         }
@@ -415,7 +415,6 @@
         }
         if(self._runActionNext === "battle-over") {
             self._runActionNext = "";
-            self.zoneInfo._floor.searches++;
             return "menu:menu";
         }
         

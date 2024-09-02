@@ -38,7 +38,14 @@ var cw = {};
     //self.actionNow = "battle";
     self.actionNow = "menu";
     self.actionStack = ["overworld", "menu", "battle"];
-    self.next = function(input){
+    self.next = function(input, menu){
+        console.log(`cw nextAction: ${self.actionNow} ${input} - ${menu}`);
+
+        if(menu) {
+            self[menu][input]();
+            return;
+        }
+
         let next_action = self[self.actionNow].next(input);
         if(next_action) {
             //move to next actionStack
@@ -112,7 +119,7 @@ var cw = {};
 
 //dictionary info is loaded
 var dictionary = {
-    "Swipe" : "Swipe"
+    "Swipe" : "Swipe",
 };
 /**
  * dictionary list
@@ -138,7 +145,7 @@ function dic (text) {
     
     self.startMenu = [
         "New Game",
-        "Load Game"
+        {id: "loadGame", t: "Load Game"}
     ];
     self.loadMenu = [
         "Game 1",
@@ -146,7 +153,7 @@ function dic (text) {
         "Game 3"
     ]
     //self.zones = [{ps: "Playstation"}];
-    self.hubMenu = [
+    /*self.hubMenu = [
         "Nintendo",
         "Playstation",
         "XBox",
@@ -154,26 +161,46 @@ function dic (text) {
         "Items",
         "Monsters"
     ];
-    self.zoneMenu = [
-        "Explore",
-        "Take Stairs",
+    */
+    /* self.zoneMenu = [
+        "❌ Explore",
+        "⬇️ Take Stairs",
         "Fight Boss",
         "Items",
         "Monsters",
         "Leave Zone"
+    ]; */
+
+    /**
+     * t: text
+     * d: disabled
+    **/
+    self.zoneMenuAdv = [
+        {id: "Explore", t: "🔍 Explore"},
+        {id: "StairsUp", t: "⬆️ Take Stairs Up", d: true},
+        {id: "StairsDown", t: "⬇️ Take Stairs Down", d: true},
+        {id: "Boss", t: "Fight Boss", d: true},
+        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
+        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
+        {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", v: "Hub" }
     ];
     //id would attach as data-action on dom
-    self.hubMenuADV = [
-        {id: "nintendo", t: "Nintendo"},
-        {id: "playstation", t: "Playstation"},
-        {id: "xbox", t: "XBox"},
-        {id: "other", t: "Other"},
-        {id: "items", t: "Items"},
-        {id: "monsters", t: "Monsters"},
+    self.hubMenu = [
+        {id: "nintendo", t: "<img class='img-emoji' src='images/logos/nintendo_logo.png' /> Nintendo"},
+        {id: "playstation", t: "<img class='img-emoji' src='images/logos/playstation_logo.png' /> Playstation"},
+        {id: "xbox", t: "<img class='img-emoji' src='images/logos/xbox_logo.png' /> XBox"},
+        {id: "other", t: "🕹️ Other",},
+        {id: "items", t: "👜 Items", action:"showItems", value:"Hub"},
+        {id: "monsters", t: "👹 Monsters", action:"showMonsters", value:"Hub"},
     ];
     
     self.nextAction = "hub";
+
+    //self.hub.
+
     self.next = function(action) {
+        console.log(`cw.menu: nextAction: ${self.nextAction} ${action}`);
+
         let action_stack = self[self.nextAction](action);
         if(action_stack) {
             if(action_stack.includes(":")){
@@ -214,7 +241,7 @@ function dic (text) {
     self.explore = function() {
         //successful explore action
         //self.zoneInfo._floor.searches++;
-        self.setDisplay(self.zoneMenu);
+        self.setDisplay(self.zoneMenuAdv);
         return "zone";
     };
     
@@ -231,7 +258,7 @@ function dic (text) {
     };
     self.startNewGame = function() {
         cw.player.load();
-        cw.dom.update(cw.player.monsters[0], "player");
+        cw.dom.update(cw.state.player.monsters[0], "player");
         
         self.setDisplay(self.hubMenu);
         self.system.dom.update(self.zoneInfo, "zone");
@@ -240,6 +267,21 @@ function dic (text) {
     self.startLoadGame = function() {
         
     };
+
+    self.loadGame = function() {
+        let save1 = localStorage.getItem('cw-save-1');
+        let save2 = localStorage.getItem('cw-save-2');
+        let save3 = localStorage.getItem('cw-save-3');
+
+        let menu = [
+            {id: "loadSave1", t: !save1 ? "" : JSON.parse(save1).player.name},
+            {id: "loadSave2", t: "another player name"},
+            {id: "loadSave2", t: "", d: true},
+            {id: "mainMenu", t: "Back"}
+        ]
+
+        self.setDisplay(menu);
+    }
     
     //pick zone on the HUB menu
     self.hub = function(zone) {
@@ -253,12 +295,17 @@ function dic (text) {
         if(self.startMenu.indexOf(zone) >= 0) {
             return self.startGame(zone);
         }
+        if(self[zone]) {
+            self[zone]();
+            return "hub";
+        }
+
         //get zone:
         self.zoneInfo = self.getZone(zone);
         
         self.system.dom.update(self.zoneInfo, "zone");
         
-        self.setDisplay(self.zoneMenu);
+        self.setDisplay(self.zoneMenuAdv);
         return "zone";
     };
     
@@ -271,7 +318,7 @@ function dic (text) {
             //create
             state_zone = self.createZone(zone);
         }
-        state_zone._floor = state_zone.floors[state_zone.floor - 1];
+        state_zone._floor = self.getFloor(state_zone, state_zone.floor);
         return state_zone;
     };
     
@@ -283,10 +330,36 @@ function dic (text) {
         self.system.state.zones[zone] = state_zone;
         return state_zone;
     };
+
+    /**
+     * get floor from zone,
+     * creates new floor at request number if does not exist
+     * @param {*} zone 
+     * @param {*} floor_num 
+     */
+    self.getFloor = function(zone, floor_num) {
+        let floor = zone.floors[floor_num];
+        if(!floor) {
+            floor = self.createFloor(zone, floor);
+        }
+        return floor;
+    }
+
+    self.createFloor = function(zone, floor_num) {
+        let floor = lib.js.copy(self.system.stateTemplate.floor);
+        floor.floor = floor_num;
+        zone.floors[floor_num] = floor;
+        return floor;
+    }
     
     self.zone = function (action) {
         //user doing action in zone  
         if (action === "Explore") {
+            //searches= 0 : 10% boss, 5% stairs, 5% item, 15% no encounter
+            // 
+            let encounter = self.encounterRoll(self.zoneInfo._floor);
+            console.log(encounter);
+            self.zoneInfo._floor.searches++;
             //random for Monster encounter, item, stairs, boss
             
             //enter battle
@@ -298,6 +371,77 @@ function dic (text) {
             return "hub";
         }
     };
+
+    /**
+     * roll random number and get 
+     * @param {object} floor
+     */
+    self.encounterRoll = function(floor) {
+        let roll = Math.random() * (100 - 0) + 0;
+        return self.encounterCheck(floor, roll);
+    }
+
+    /**
+     * check which encounter for given floor state and roll number
+     * @param {object} floor
+     * @param {number} roll 0 - 100
+     */
+    self.encounterCheck = function(floor, roll) {
+        let seed = floor.searches;
+        let chance = 0;
+        console.log(`seed: ${seed}, roll: ${roll}`);
+        
+        //higher number, higher chance for boss/
+        if(floor.boss < 1) {
+            //still not found or killed boss
+            //.1 at seed0
+            //.5 seed 8
+            //.05 each floor
+            let boss_base = 10;
+            let boost = 5 * seed;
+            boost = boost < 40 ? boost : 40;
+            chance = boss_base + (5 *seed);
+            console.log("boss chance: " + chance);
+            if(roll < chance) {
+                return "boss";
+            }
+        }
+        if(floor.stairs == 0) {
+            //is boss defeated
+            if(floor.boss == 1) {
+                //50%
+                chance = 50;
+                if(roll < chance) {
+                    return "stairs";
+                }
+            }
+            else {
+                //10% after boss search
+                chance += 10;
+                if(roll < chance) {
+                    console.log(`stairs: chance ${chance}, roll ${roll}`)
+                    return "stairs";
+                }
+            }
+        }
+        //item
+        chance += 5;
+        if(roll < chance) {
+            console.log(`item: chance ${chance}, roll ${roll}`)
+            return "item";
+        }
+        chance += 10;
+        if(roll < chance) {
+            console.log(`nothing: chance ${chance}, roll ${roll}`)
+            return "nothing";
+        }
+
+        return "monster";
+    }
+
+    self.save = function() {
+        localStorage.setItem('cw-save-1', JSON.stringify(self.system.state));
+    }
     
     /**
      * set message window

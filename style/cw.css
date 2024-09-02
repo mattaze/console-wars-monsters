@@ -36,6 +36,16 @@ body {
     margin-left: auto;
 }
 
+
+/* ### */
+.img-emoji {
+    height: 1em;
+    vertical-align: middle;
+}
+
+
+
+
 button > * {
     pointer-events: none;
 }

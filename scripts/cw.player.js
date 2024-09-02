@@ -6,12 +6,14 @@
 
 (function() {
     //** make this a little bit more context safe */
-    let self = this;
+    let self = this.player = {};
+    self.system = this;
 
     /** variable is exposed */
     self.public_variable = null;
 
     self.monsters = [];
+    self.items = [];
     self.name = "player name";
 
     /** underscore notation for private, but this is still exposed publicly */
@@ -35,8 +37,8 @@
         let first_monster = cw.monsters.random(1);
         //first_monster.name = "Players Bat";
         first_monster.name = first_monster.id;
-        self.monsters.push(first_monster);
+        self.system.state.player.monsters.push(first_monster);
     };
 
     return self;
-}).apply(cw.player = {});
+}).apply(cw);

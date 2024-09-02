@@ -135,7 +135,3 @@ lib.func.rp = function(str, obj) {
     }
     return new_str;
 };
-
-lib.isFunction = function(obj) {
-    return typeof obj === "function";
-}

@@ -1,0 +1,57 @@
+menu - disable buttons
+
+test functions:
+- more test functions
+
+
+!!!
+
+Get SAVE to call save function.
+
+have Player part of state
+
+Save cw.state to 
+
+
+
+Save Game (menu - next - hub.new game)
+Load Game
+
+
+Zones (Hub)
+    Playstation
+    XBox
+    Nintendo
+    Other
+    Items
+    Monsters
+
+
+X Zone (cw.menu)
+    Explore
+    Stairs
+    Boss
+    Items
+    Monsters
+
+Explore
+    Text "encounter"
+        -> Battle Menu
+
+Battle
+    Attack
+    Items
+    Monsters
+    Run
+
+
+
+Battle.Attack
+    -- current monster attacks
+    Back
+
+Battle.Items
+    - show items
+        - click to show details
+        Use
+        Back

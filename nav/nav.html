@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700italic,400italic,700" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto';
+            margin: 8px;
+        }
+        .errorlog {
+            position: absolute;
+            bottom: 0px;
+            background-color: lightgrey;
+            width: 90vw;
+        }
+
+        /* .option {
+            cursor: pointer;
+            border: 1px solid gray;
+        } */
+
+        .messagelog {
+            cursor: pointer;
+            background-color: lightgray;
+            /* padding: 5px 20px;
+            height: 200px; */
+            height: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .messagelog p {
+            margin-block-start: .5em;
+            margin-block-end: .5em;
+        }
+
+        .messagelog p:last-child {
+            background-color: black;
+            color: white;
+        }
+
+        .messagelog p:last-child::before {
+            content: "> "
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* encounter */
+        .explore-encounter {
+            color: red;
+        }
+
+        .img-emoji {
+            height: 1em;
+            vertical-align: middle;
+        }
+
+        #control-area {
+            height:200px;
+            padding: 5px 20px;
+        }
+
+        button.option {
+            height: 25px;
+        }
+
+    </style>
+</head>
+
+<body>
+    
+    <h2 id="main-title"></h2>
+
+    <div id="control-area">
+        
+        <ul id="options" class="display-type">
+            <li class="option" data-action="main.load" data-value="">if seeing this, something not loaded</li>
+        </ul>
+
+        <div id="messages" class="display-type messagelog hidden option">
+            <span id='latest-message-pointer' class="hidden"> &gt; </span>
+        </div>
+
+        <div id="item-display" class="display-type hidden">
+            <h3 data-item="title"></h3>
+            <p data-item="desc"></p>
+            <ul>
+                <li>Quantity: <span data-item="quantity"></span></li>
+                <li>Effect: <span data-item="effect"></span></li>
+                <li>duratiion: <span data-item="duraction"></span></li>
+            </ul>
+            <ul id="item-options"  >
+                <li >
+                    <button id="item-use" class="option" data-action="" data-value="">Use</button>
+                </li>
+                <li >
+                    <button id="item-use" class="option" data-action="" data-value="">Back</button>
+                </li>
+                <li >
+                    <!-- chance that discard allows enemy to pick up and use. but also might be negative for enemey -->
+                    <button id="item-use" class="option" data-action="" data-value="">Discard</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="zoneinfo">
+        <h3>Zone Info</h3>
+        <ul>
+            <li>Floor: <span data-zone="floor"></span></li>
+            <li>Explored times: <span data-zone="explored"></span></li>
+            <li>Stairs Found: <span data-zone="stairsFound"></span></li>
+            <li>Boss Found: <span data-zone="bossFound"></span></li>
+            <li>Boss Killed: <span data-zone="bossKilled"></span></li>
+        </ul>
+    </div>
+
+
+    <div class="errorlog">
+        <h4>errors</h4>
+        <p id="errorlog"></p>
+    </div>
+
+
+
+
+
+    <script src="util.js" asp-append-version="true"></script>
+    <script src="lib.js" asp-append-version="true"></script>
+    <script src="cw.dom.js" asp-append-version="true"></script>
+
+    <script src="gid.js" asp-append-version="true"></script>
+    <script src="nav.js" asp-append-version="true"></script>
+	
+    <script src="zones.js" asp-append-version="true"></script>
+    <script src="zone.js" asp-append-version="true"></script>
+    <script src="items.js" asp-append-version="true"></script>
+    <script src="monsters.js" asp-append-version="true"></script>
+    <script src="cw.monsters.js" asp-append-version="true"></script>
+    <script src="monsters.nav.js" asp-append-version="true"></script>
+    
+    <script src="start.js" asp-append-version="true"></script>
+</body>
+</html>

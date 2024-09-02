@@ -6,21 +6,26 @@
  */
 
 cw.state = {
-    player: {},
+    player: {
+        /** variable is exposed */
+        //self.public_variable = null;
+        name: "player name",
+        monsters: []
+    },
     zones: {
         Playstation: {
             id:"ps",
             name:"Playstation",
             zone:"Playstation",
-            floor: 1,
-            floors: [
-                {
-                floor: 0,
-                searches: 0,
-                stairs: -1,
-                boss: -1,
+            floor: 5,
+            floors: {
+                "1": {
+                    floor: 0,
+                    searches: 0,
+                    stairs: 0,
+                    boss: -1,
                 }
-            ]
+            }
         }
     }
 };
@@ -31,13 +36,19 @@ cw.stateTemplate = {
         name: "string",
         zone: "string",
         floor: 1, //current floor on - start 1, array[floor - 1];
-        floors: [
-            {
+        floors: {
+            "1": {
                 floor: 0,
                 searches: 0,
-                stairs: -1,
+                stairs: 0,
                 boss: -1
             }
-        ]
+        }
+    },
+    floor: {
+        floor: 0,
+        searches: 0,
+        stairs: 0,
+        boss: -1
     }
 };

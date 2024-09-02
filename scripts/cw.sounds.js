@@ -31,7 +31,7 @@
         // self.background = new Audio(url);
         // self.background.loop = true;
         // self.background.play();
-        
+        /*
         self.background = document.querySelector('audio');
         self.background.src = lib.js.random(self.types.music);
         self.background.loop = true;
@@ -53,11 +53,12 @@
             // Show a "Play" button so that user can start playback.
         });
         }
+        */
     };
 
     self.play = function(url) {
         return;
-        new Audio(url).play();
+       // new Audio(url).play();
     };
 
     
