@@ -11,7 +11,7 @@
     s.elms = {
         message: "message",
         output: "output",
-        button: "<button data-action='@a' @d>@t</button>"
+        button: "<button data-action='@a' data-value='@v' @d>@t</button>"
     };
     
 
@@ -20,27 +20,36 @@
      * @param
      */
     self.clickEvent = function(event) {
-        if(event.target.nodeName == 'BUTTON') {
-            let action = event.target.dataset.action;
-            let menu = event.target.dataset.menu;
-            
-            //using textContent saved having dataset item.
-            //however for alt-languages - dataset useful for code and leave display text flexible.
-            //let value = event.target.dataset.value;
-            //let value = event.target.textContent;
-            
-            self.system.next(action, menu);
+        try{
+            if(event.target.nodeName == 'BUTTON') {
+                let action = event.target.dataset.action;
+                let menu = event.target.dataset.menu;
+                let value = event.target.dataset.value;
+                
+                //using textContent saved having dataset item.
+                //however for alt-languages - dataset useful for code and leave display text flexible.
+                //let value = event.target.dataset.value;
+                //let value = event.target.textContent;
+                
+                //self.system.next(action, menu);
+                self.system.next(action, value);
 
-            // let action_function = self.system[self.system.mode][action];
-            // if(action_function) {
-            //     action_function(value);
-            // }
+                // let action_function = self.system[self.system.mode][action];
+                // if(action_function) {
+                //     action_function(value);
+                // }
 
-            return false;
-        } else {
-            //too next text dialog.
-            self.system.next();
+                return false;
+            } else {
+                //too next text dialog.
+                self.system.next();
+            }
         }
+        catch(error) {
+            document.getElementById("errorlog").innerHTML = error.message;
+            throw error;
+        }
+
     };
     window.addEventListener("click", self.clickEvent, false);
 
@@ -210,11 +219,12 @@
     
     self.func.reduceButtonsAdv = (total, current) => 
         total + self.func.rp(self.elms.button, typeof current == "string" ?
-            {'@a': current, '@t': dic(current), '@d': ""} :
+            {'@a': current, '@t': dic(current), '@d': "", '@v':""} :
             {
-                '@a': current.id, 
+                '@a': current.action || current.id, 
                 '@t': dic(current.t || current.id),
-                '@d': current.d ? "disabled" : ""
+                '@d': current.d ? "disabled" : "",
+                '@v': current.value
             }
         );
 

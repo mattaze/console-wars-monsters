@@ -33,39 +33,62 @@ var cw = {};
 (function() {
     let self = this;
 
+
     /** what mode system currently in : Battle, World, - used for action referencing and which namespace to call */
     self.mode = "battle";
     //self.actionNow = "battle";
     self.actionNow = "menu";
     self.actionStack = ["overworld", "menu", "battle"];
-    self.next = function(input, menu){
-        console.log(`cw nextAction: ${self.actionNow} ${input} - ${menu}`);
+    self.next = function(action, menu){
+        console.log(`cw.next nextAction: ${self.actionNow} ${action} - ${menu}`);
 
-        if(menu) {
-            self[menu][input]();
-            return;
-        }
-
-        let next_action = self[self.actionNow].next(input);
-        if(next_action) {
-            //move to next actionStack
-        //    self.actionNow = self.actionStack.push(self.actionNow);
-        //    self.actionStack.shift();
-            self.actionNow = next_action;
-            //call actionNow load
-            if(self.actionNow == "battle") {
-                self[self.actionNow].load(self.menu.zoneInfo);
-            }
-            self[self.actionNow].load();
+        //sep2024 replace with not using actionNow and next()
+        if(self[action]) {
+            self[action](value);
         }
         else {
-            
+            console.log("calling the old next system - x6543");
+            if(menu) {
+                self[menu][action]();
+                return;
+            }
+
+            let next_action = self[self.actionNow].next(action);
+            if(next_action) {
+                //move to next actionStack
+            //    self.actionNow = self.actionStack.push(self.actionNow);
+            //    self.actionStack.shift();
+                self.actionNow = next_action;
+                //call actionNow load
+                if(self.actionNow == "battle") {
+                    self[self.actionNow].load(self.menu.zoneInfo);
+                }
+                self[self.actionNow].load();
+            }
+            else {
+                
+            }
         }
     };
-    
-    self.startBattle = function() {
-        self.battle.load();
+
+    self.showItems = function (callfrom) {
+        console.log("showItems inital work - 19qv")
+        //back to zone
+        //back to hub, battle
+        let nav = [{ t: "🔙 Back", action: "Goto", v: callfrom }];
         
+        Player.Items.forEach(item => nav.push({d:item.title, action:"ShowItem", v: item.id, callfrom: callfrom}));
+    
+        Game.DisplayPrompt(nav);
+        Game.Util.ShowOptions();
+        //hub, zone, battle
+        //    monster
+        //{ id:"Explore", d: "Explore", action: "ItemDetail", v: "request_menu" }
+    };
+
+    self.startBattle = function () {
+        self.battle.load();
+
         self.actionNow = "battle";
         return "battle";
     };
@@ -171,45 +194,61 @@ function dic (text) {
         "Leave Zone"
     ]; */
 
+    self.g = self.g || {};
+    self.g.logo = {
+        playstation_logo : "<img class='img-emoji' src='images/logos/playstation_logo.png' />",
+        nintendo_logo : "<img class='img-emoji' src='images/logos/nintendo_logo.png' />",
+        xbox_logo : "<img class='img-emoji' src='images/logos/xbox_logo.png' />",
+    }
+
     /**
      * t: text
      * d: disabled
     **/
-    self.zoneMenuAdv = [
-        {id: "Explore", t: "🔍 Explore"},
-        {id: "StairsUp", t: "⬆️ Take Stairs Up", d: true},
-        {id: "StairsDown", t: "⬇️ Take Stairs Down", d: true},
-        {id: "Boss", t: "Fight Boss", d: true},
-        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
-        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
-        {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", v: "Hub" }
-    ];
     //id would attach as data-action on dom
     self.hubMenu = [
-        {id: "nintendo", t: "<img class='img-emoji' src='images/logos/nintendo_logo.png' /> Nintendo"},
-        {id: "playstation", t: "<img class='img-emoji' src='images/logos/playstation_logo.png' /> Playstation"},
-        {id: "xbox", t: "<img class='img-emoji' src='images/logos/xbox_logo.png' /> XBox"},
-        {id: "other", t: "🕹️ Other",},
+        {id: "nintendo", t: self.g.logo.nintendo_logo + " Nintendo", action: "GotoZone", v: "Nintendo"},
+        {id: "playstation", t: self.g.logo.playstation_logo + " Playstation", action: "GotoZone", v: "Playstation"},
+        {id: "xbox", t: self.g.logo.xbox_logo + " XBox", action: "GotoZone", v: "XBox"},
+        {id: "other", t: "🕹️ Other", action: "GotoZone", value: "Other"},
         {id: "items", t: "👜 Items", action:"showItems", value:"Hub"},
         {id: "monsters", t: "👹 Monsters", action:"showMonsters", value:"Hub"},
     ];
+    self.zoneMenuAdv = [
+        {id: "Explore", t: "🔍 Explore", action: "ZoneExplore", v: ""},
+        {id: "StairsUp", t: "⬆️ Take Stairs Up", action: "ZoneStairsUp", value: "", disabled: true},
+        {id: "StairsDown", t: "⬇️ Take Stairs Down", action: "ZoneStairsDown", value: "", disabled: true},
+        {id: "Boss", t: "⚔️ Fight Boss", action: "ZoneFightBoss", value: "", d: true},
+        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
+        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
+        {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
+    ];
     
+
     self.nextAction = "hub";
 
     //self.hub.
 
-    self.next = function(action) {
-        console.log(`cw.menu: nextAction: ${self.nextAction} ${action}`);
+    self.next = function(action, value) {
+        console.log(`2cw.menu: nextAction: ${self.nextAction} ${action}`);
 
-        let action_stack = self[self.nextAction](action);
-        if(action_stack) {
-            if(action_stack.includes(":")){
-                action_stack = action_stack.split(":");
-                self.nextAction = action_stack[1];
-                return action_stack[0];
-            }
-            else {
-                self.nextAction = action_stack;
+        console.log("i want to remove this - c122");
+        
+        //sep2024 replace with not using actionNow and next()
+        if(self[action]) {
+            self[action](value);
+        }
+        else {
+            let action_stack = self[self.nextAction](action);
+            if(action_stack) {
+                if(action_stack.includes(":")){
+                    action_stack = action_stack.split(":");
+                    self.nextAction = action_stack[1];
+                    return action_stack[0];
+                }
+                else {
+                    self.nextAction = action_stack;
+                }
             }
         }
         
@@ -217,6 +256,10 @@ function dic (text) {
         //return action_stack;
         
         self.update();
+    };
+
+    self.showItem = function(callFrom) {
+        console.log("show item");
     };
     
     self.update = function() {

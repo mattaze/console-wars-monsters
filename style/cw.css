@@ -7,6 +7,13 @@ body {
     display: none;
 }
 
+.errorlog {
+    position: absolute;
+    bottom: 0px;
+    background-color: lightgrey;
+    width: 90vw;
+}
+
 /* css grid stuff */
 .grid-container {
     display: grid;
