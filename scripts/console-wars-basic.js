@@ -71,6 +71,11 @@ var cw = {};
         }
     };
 
+    self.menuItems = {
+        back: { t: "🔙 Back", action: "Goto", v: callfrom }
+    };
+
+
     self.showItems = function (callfrom) {
         console.log("showItems inital work - 19qv")
         //back to zone
@@ -85,6 +90,9 @@ var cw = {};
         //    monster
         //{ id:"Explore", d: "Explore", action: "ItemDetail", v: "request_menu" }
     };
+    self.showMonsters = fuction (callfrom) {
+
+    }
 
     self.startBattle = function () {
         self.battle.load();

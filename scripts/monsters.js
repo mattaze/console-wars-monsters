@@ -337,3 +337,24 @@ var attacks = {
 };
 
 //attack that critical if target.p is low.
+
+
+
+/*
+    Nintendo:
+
+    Metal Mario - only weak to water
+
+    Jump Man (arcade) -> Super Mario (nes) -> Super Mario World (snes)
+    Mario 64 -> Mario Cube -> Mario Wii -> Mario Switch
+
+    Link 2d -> Link 3d
+    Link Legend -> Link Past -> Link Time -> Link Waker -> Link Princess
+        -> Link Sword -> Link Wild
+
+    Link mobile -- Link Awakening -> Link 4 swords -> Link Hourglass -> 
+
+
+
+    Other / 
+ */
