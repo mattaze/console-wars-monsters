@@ -193,13 +193,14 @@
     };
     
     /**
+     * /**
      * provide array of strings for menu buttons
      * strings will use dictionary to look up if language conversion
      * 
-     * @param {String} data_action use array object attribute for data-action
-     * @param {String} data_value use array object attribute for data-value
+     * @param {String} id
+     * @param {Array} array
      */
-    self.setMenu = function(id, array, data_action, data_value) {
+    self.setMenu = function(id, array) {
         let elm = document.getElementById(id);
         if(!elm){
             console.error("setMenu not found id: " + id);
@@ -208,6 +209,16 @@
         let buttons = array.reduce(self.func.reduceButtonsAdv, "");
         elm.innerHTML = buttons;
     };
+
+    /**
+     * combines setMenu and setDisplay
+     * @param {String} id 
+     * @param {*} array 
+     */
+    self.setMenuAndDisplay = function(id, array) {
+        self.setMenu(id, array);
+        self.setDisplay(id);
+    }
     
     
     

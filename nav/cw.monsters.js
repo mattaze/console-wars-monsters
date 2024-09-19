@@ -3,7 +3,7 @@
  * version 0.1
  * monster operations
  */
-var cw = cw || {};
+var cw = cw ?? {};
 (function() {
     let self = this;
     self._count = 0;

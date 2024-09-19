@@ -29,7 +29,7 @@
     
     /**
      * 
-     * @param {Number} lvl of monster to generate
+     * @param {Number} level of monster to generate
      */
     self.random = function(level) {
         if(!level) {
@@ -46,6 +46,9 @@
         monster.l = level;
         monster.xp = 10 + level - 1;
         monster.h = 1;
+
+        //unique id
+        monster.uid = Math.random().toString(16).slice(2);
         
         return monster;
         //bitwise version of floor  return obj[keys[ keys.length * Math.random() << 0]];

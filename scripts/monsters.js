@@ -1,6 +1,8 @@
 /**
- * name: inherit from containing object
+ * name: inherit from containing object id
  *  only player monsters have alternative naming
+ * 
+ * uid: unique id generated for each caputer monsters- to avoid duplicates
  * 
  * l: level - gain +1 for each xp - start 1
  * xp: experience points - unspent - start 10
@@ -44,6 +46,7 @@ var d = {
 var monsters = {
     "Bat": {
         id: "Bat",
+        name: "Bat",
         // image: {
         //     url: "images/monsters/Pipoya_RPG_Monster_Pack/pipo-enemy001.png"
         // },
@@ -65,6 +68,7 @@ var monsters = {
     },
     "Lightning Bat": {
         id: "Lightning Bat",
+        name: "Lightning Bat",
         image: {
             url: "images/monsters/Pipoya_RPG_Monster_Pack/pipo-enemy001b.png",
             attribute: "Pipoya RPG Monster Pack"
@@ -84,6 +88,7 @@ var monsters = {
     },
     "Super Mario Rampage": {
         id: "Super Mario Rampage",
+        name: "Super Mario Rampage",
         image: {
             url: "images/monsters/ref/super_mario_rampage.png",
             attribute: "not sure - http://gprime.net/contact/"
@@ -104,6 +109,7 @@ var monsters = {
     },
     "Electric Rat": {
         id: "Electric Rat",
+        name: "Electric Rat",
         image: {
             sprite: true,
             sheet: "pokemon1",
@@ -128,6 +134,7 @@ var monsters = {
     },
     "Pikachu": {
         id: "Electric Rat",
+        name: "Electric Rat",
         image: {
             sprite: true,
             sheet: "pokemon1",
@@ -152,6 +159,7 @@ var monsters = {
     },
     "Pigeon": {
         id: "Pigeon",
+        name: "Pigeon",
         image: {
             sprite: true,
             sheet: "pokemon1",
@@ -176,6 +184,7 @@ var monsters = {
     },
     "Zombie Bulbasaur": {
         id: "Zombie Bulbasaur",
+        name: "Zombie Bulbasaur",
         image: {
             sprite: true,
             sheet: "ZombiePokemon1",
@@ -200,6 +209,7 @@ var monsters = {
     },
     "Zombie Charmander": {
         id: "Zombie Charmander",
+        name: "Zombie Charmander",
         image: {
             sprite: true,
             sheet: "ZombiePokemon1",
@@ -224,6 +234,7 @@ var monsters = {
     },
     "Zombie Abra": {
         id: "Zombie Abra",
+        name: "Zombie Abra",
         image: {
             sprite: true,
             sheet: "ZombiePokemon1",
@@ -248,6 +259,7 @@ var monsters = {
     },
     "Master Chief 1": {
         id: "Master Chief 1",
+        name: "Master Chief 1",
         image: {
             url: "images/monsters/halo/halo_master_chief_1.jpg",
             attribute: "not sure - reddit"
@@ -270,6 +282,7 @@ var monsters = {
     },
     "Cursor": {
         id: "Cursor",
+        name: "Cursor",
         image: {
             url: "images/monsters/pc/cursor.png",
             attribute: "pixel art"

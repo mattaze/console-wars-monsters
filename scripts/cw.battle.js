@@ -1,7 +1,8 @@
 //"use strict";
 
 (function() {
-    let self = this;
+    let self = this.battle = {}
+    self.system =  this;
     
     self.actionStack = ["menu", "action", "actionPriority", "isDead"];
     self.nextAction = "menu";
@@ -560,4 +561,5 @@
     };
 
     return self;
-}).apply(cw.battle = {});
+//}).apply(cw.battle = {});
+}).apply(cw);

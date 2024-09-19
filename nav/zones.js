@@ -47,21 +47,6 @@ Game.Zones = {
         ]
     },
     Other: {
-        title: "PC",
-        id: "PC",
-        currentFloor: 0,
-        maxFloor: 2,
-        floors: [
-            {
-                id: 0,
-                explored: 0,
-                bossFound: false,
-                bossKilled: false,
-                stairsDown: false
-            }
-        ]
-    },
-    Other: {
         title: "Other",
         id: "Other",
         currentFloor: 0,

@@ -29,8 +29,9 @@
 //response move
 
  //aka system
-var cw = {};
+var cw = cw ?? {};
 (function() {
+    //this is system
     let self = this;
 
 
@@ -39,8 +40,10 @@ var cw = {};
     //self.actionNow = "battle";
     self.actionNow = "menu";
     self.actionStack = ["overworld", "menu", "battle"];
-    self.next = function(action, menu){
-        console.log(`cw.next nextAction: ${self.actionNow} ${action} - ${menu}`);
+    self.next = function(action, value){
+        console.log(`cw.next nextAction: ${self.actionNow} ${action} - ${value}`);
+
+        let menu = ""; //defunt oject, replaced with value parameter
 
         //sep2024 replace with not using actionNow and next()
         if(self[action]) {
@@ -71,9 +74,38 @@ var cw = {};
         }
     };
 
+    
     self.menuItems = {
-        back: { t: "🔙 Back", action: "Goto", v: callfrom }
+        back: { t: "🔙 Back", action: "Goto", v: "callfrom" }
     };
+
+    self.g = self.g || {};
+    self.g.logo = {
+        playstation_logo : "<img class='img-emoji' src='images/logos/playstation_logo.png' />",
+        nintendo_logo : "<img class='img-emoji' src='images/logos/nintendo_logo.png' />",
+        xbox_logo : "<img class='img-emoji' src='images/logos/xbox_logo.png' />",
+    }
+
+    self.menus = {};
+    self.menus.hubMenu = [
+        {id: "nintendo", t: self.g.logo.nintendo_logo + " Nintendo", action: "GotoZone", value: "Nintendo"},
+        {id: "playstation", t: self.g.logo.playstation_logo + " Playstation", action: "GotoZone", value: "Playstation"},
+        {id: "xbox", t: self.g.logo.xbox_logo + " XBox", action: "GotoZone", value: "XBox"},
+        {id: "other", t: "🕹️ Other", action: "GotoZone", value: "Other"},
+        {id: "items", t: "👜 Items", action:"showItems", value:"Hub"},
+        {id: "monsters", t: "👹 Monsters", action:"showMonsters", value:"Hub"},
+    ];
+    self.menus.zoneMenu = [
+        {id: "Explore", t: "🔍 Explore", action: "ZoneExplore", value: ""},
+        {id: "StairsUp", t: "⬆️ Take Stairs Up", action: "ZoneStairsUp", value: "", disabled: true},
+        {id: "StairsDown", t: "⬇️ Take Stairs Down", action: "ZoneStairsDown", value: "", disabled: true},
+        {id: "Boss", t: "⚔️ Fight Boss", action: "ZoneFightBoss", value: "", d: true},
+        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
+        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
+        {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
+    ];
+    
+
 
 
     self.showItems = function (callfrom) {
@@ -82,16 +114,26 @@ var cw = {};
         //back to hub, battle
         let nav = [{ t: "🔙 Back", action: "Goto", v: callfrom }];
         
-        Player.Items.forEach(item => nav.push({d:item.title, action:"ShowItem", v: item.id, callfrom: callfrom}));
+        self.state.player.items.forEach(item => nav.push({t:item.name, action:"showItem", value: item.id, callfrom: callfrom}));
     
-        Game.DisplayPrompt(nav);
-        Game.Util.ShowOptions();
-        //hub, zone, battle
-        //    monster
-        //{ id:"Explore", d: "Explore", action: "ItemDetail", v: "request_menu" }
+        self.dom.setMenuAndDisplay("action-menu", nav);
     };
-    self.showMonsters = fuction (callfrom) {
+    self.showItem = function (item_id, callfrom) {
+        console.log("showItem: " + item_id + " callfrom: " + callfrom);
+    }
 
+    self.showMonsters = function (callfrom) {
+        //self.monsters.showMonster();
+        
+        //{id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
+        let nav = [{ t: "🔙 Back", action: "Goto", v: callfrom }];
+        self.state.player.monsters.forEach(mon => nav.push({t:mon.name, action: "showMonster", value: mon.uid, callfrom: callfrom}));
+        
+        self.dom.setMenuAndDisplay("action-menu", nav);
+    };
+
+    self.showMonster = function (uid, callfrom) {
+        console.log("showMonster: " + uid + " callfrom: " + callfrom);
     }
 
     self.startBattle = function () {
@@ -202,40 +244,15 @@ function dic (text) {
         "Leave Zone"
     ]; */
 
-    self.g = self.g || {};
-    self.g.logo = {
-        playstation_logo : "<img class='img-emoji' src='images/logos/playstation_logo.png' />",
-        nintendo_logo : "<img class='img-emoji' src='images/logos/nintendo_logo.png' />",
-        xbox_logo : "<img class='img-emoji' src='images/logos/xbox_logo.png' />",
-    }
 
     /**
      * t: text
      * d: disabled
     **/
     //id would attach as data-action on dom
-    self.hubMenu = [
-        {id: "nintendo", t: self.g.logo.nintendo_logo + " Nintendo", action: "GotoZone", v: "Nintendo"},
-        {id: "playstation", t: self.g.logo.playstation_logo + " Playstation", action: "GotoZone", v: "Playstation"},
-        {id: "xbox", t: self.g.logo.xbox_logo + " XBox", action: "GotoZone", v: "XBox"},
-        {id: "other", t: "🕹️ Other", action: "GotoZone", value: "Other"},
-        {id: "items", t: "👜 Items", action:"showItems", value:"Hub"},
-        {id: "monsters", t: "👹 Monsters", action:"showMonsters", value:"Hub"},
-    ];
-    self.zoneMenuAdv = [
-        {id: "Explore", t: "🔍 Explore", action: "ZoneExplore", v: ""},
-        {id: "StairsUp", t: "⬆️ Take Stairs Up", action: "ZoneStairsUp", value: "", disabled: true},
-        {id: "StairsDown", t: "⬇️ Take Stairs Down", action: "ZoneStairsDown", value: "", disabled: true},
-        {id: "Boss", t: "⚔️ Fight Boss", action: "ZoneFightBoss", value: "", d: true},
-        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
-        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
-        {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
-    ];
     
 
     self.nextAction = "hub";
-
-    //self.hub.
 
     self.next = function(action, value) {
         console.log(`2cw.menu: nextAction: ${self.nextAction} ${action}`);
@@ -266,10 +283,6 @@ function dic (text) {
         self.update();
     };
 
-    self.showItem = function(callFrom) {
-        console.log("show item");
-    };
-    
     self.update = function() {
         self.system.dom.update(self.zoneInfo, "zone");
     };
@@ -292,7 +305,7 @@ function dic (text) {
     self.explore = function() {
         //successful explore action
         //self.zoneInfo._floor.searches++;
-        self.setDisplay(self.zoneMenuAdv);
+        self.setDisplay(self.system.menus.zoneMenu);
         return "zone";
     };
     
@@ -339,10 +352,6 @@ function dic (text) {
         if(!zone) {
             return;
         }
-        //ignore Monsters/Items
-        if(zone == "Monsters" || zone == "Items") {
-            return;
-        }
         if(self.startMenu.indexOf(zone) >= 0) {
             return self.startGame(zone);
         }
@@ -356,7 +365,7 @@ function dic (text) {
         
         self.system.dom.update(self.zoneInfo, "zone");
         
-        self.setDisplay(self.zoneMenuAdv);
+        self.setDisplay(self.system.menus.zoneMenu);
         return "zone";
     };
     
