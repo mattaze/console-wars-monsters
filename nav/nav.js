@@ -276,13 +276,3 @@ Game.Util.GetSave = function (key) {
     }
     return false;
 }
-
-
-
-
-
-
-
-
-
-Game.Load();

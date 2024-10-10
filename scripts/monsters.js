@@ -22,6 +22,24 @@
  * am : attack moves
  */
 
+
+
+/**
+ * Starter picker:
+ *  nintendo: Baby Mario -> Small Mario -> Mario
+ *  playstation: Bandi (baby) -> Coot (teen) -> Crash Bandicoot
+ *  xbox : Soldier -> Chief -> Master Chief
+ *  indie/other: Retro Joystick Atari -> Arcade Stick -> Elite Flight Control Joystick
+ * 
+ */
+
+
+
+
+
+
+
+
 /**
  * Issues list:
  * id and main monster loop paramter is the same.

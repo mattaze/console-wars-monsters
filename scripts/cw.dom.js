@@ -51,7 +51,12 @@
         }
 
     };
+
     window.addEventListener("click", self.clickEvent, false);
+
+    self.error = function (message) {
+        document.getElementById("errorlog").innerHTML = error.message;
+    }
 
     /**
      * update DOM
@@ -187,6 +192,10 @@
         s.closeMessage();
         return false;
     };
+    self.messageAction = function(text, action, value) {
+        self.message(text);
+        
+    }
     
     s.closeMessage = function() {
         s.setDisplay(s._messageLastDisplayID);

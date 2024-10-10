@@ -4,6 +4,8 @@
  * battle operations
  */
 
+debug = true;
+
 // NEXT TASK: load monster info 0- name, hp, type
 
 // Step 1 - get fight button to make attack action, remove enemy hp
@@ -40,7 +42,7 @@ var cw = cw ?? {};
     //self.actionNow = "battle";
     self.actionNow = "menu";
     self.actionStack = ["overworld", "menu", "battle"];
-    self.next = function(action, value){
+    self.next = function (action, value){
         console.log(`cw.next nextAction: ${self.actionNow} ${action} - ${value}`);
 
         let menu = ""; //defunt oject, replaced with value parameter
@@ -106,8 +108,6 @@ var cw = cw ?? {};
     ];
     
 
-
-
     self.showItems = function (callfrom) {
         console.log("showItems inital work - 19qv")
         //back to zone
@@ -133,8 +133,18 @@ var cw = cw ?? {};
     };
 
     self.showMonster = function (uid, callfrom) {
-        console.log("showMonster: " + uid + " callfrom: " + callfrom);
+        console.log("showMonster: " + uid + " callfrom: " + callfrom + " NEED WORK ADDED");
+        self.dom.error("showMonster: " + uid + " callfrom: " + callfrom + " NEED WORK ADDED");
     }
+
+    
+    self.ZoneExplore = function (zone_floor) {
+        console.log("cw.ZoneExplore - searching");
+
+        self.zone.Explore(zone_floor);
+    }
+
+
 
     self.startBattle = function () {
         self.battle.load();
@@ -143,10 +153,21 @@ var cw = cw ?? {};
         return "battle";
     };
 
+    self.NewGame = function () {
+        self.player.load();
+        self.dom.update(cw.state.player.monsters[0], "player");
+        
+        self.dom.setMenuAndDisplay("action-menu", self.menus.hubMenu);
+
+        let hubinfo = {zone:"Hub", floor: "_", "_floor" : {searches: "_"}}
+        self.dom.update(hubinfo, "zone");
+        return "hub";
+    }
+
     /**
      * start system
      */
-    self.load = function() {
+    self.load = function () {
         self.sounds.backgroundMusic(self.sounds.types.music.battle);
        
         
@@ -217,7 +238,7 @@ function dic (text) {
     
     
     self.startMenu = [
-        "New Game",
+        {id: "NewGame", t:"New Game", action:"NewGame", value:""},
         {id: "loadGame", t: "Load Game"}
     ];
     self.loadMenu = [
@@ -254,7 +275,7 @@ function dic (text) {
 
     self.nextAction = "hub";
 
-    self.next = function(action, value) {
+    self.next = function (action, value) {
         console.log(`2cw.menu: nextAction: ${self.nextAction} ${action}`);
 
         console.log("i want to remove this - c122");
@@ -283,12 +304,12 @@ function dic (text) {
         self.update();
     };
 
-    self.update = function() {
+    self.update = function () {
         self.system.dom.update(self.zoneInfo, "zone");
     };
     
     self._loaded = false;
-    self.load = function() {
+    self.load = function () {
         if(self._loaded) {
             self.next();
             return;
@@ -302,37 +323,37 @@ function dic (text) {
         return "hub";
     };
     
-    self.explore = function() {
+    self.explore = function () {
         //successful explore action
         //self.zoneInfo._floor.searches++;
         self.setDisplay(self.system.menus.zoneMenu);
         return "zone";
     };
     
-    self.setDisplay = function(array) {
+    self.setDisplay = function (array) {
         self.system.dom.setMenu("action-menu", array);
         cw.dom.setDisplay("action-menu");
     };
     
-    self.startGame = function(type){
+    self.startGame = function (type){
         type = type.replace(" ", "");
         if(self["start" + type]) {
             return self["start" + type]();
         }
     };
-    self.startNewGame = function() {
+    /* self.startNewGame = function () {
         cw.player.load();
         cw.dom.update(cw.state.player.monsters[0], "player");
         
         self.setDisplay(self.hubMenu);
         self.system.dom.update(self.zoneInfo, "zone");
         return "hub";
-    };
-    self.startLoadGame = function() {
+    }; */
+    self.startLoadGame = function () {
         
     };
 
-    self.loadGame = function() {
+    self.loadGame = function () {
         let save1 = localStorage.getItem('cw-save-1');
         let save2 = localStorage.getItem('cw-save-2');
         let save3 = localStorage.getItem('cw-save-3');
@@ -348,13 +369,13 @@ function dic (text) {
     }
     
     //pick zone on the HUB menu
-    self.hub = function(zone) {
+    self.hub = function (zone) {
         if(!zone) {
             return;
         }
-        if(self.startMenu.indexOf(zone) >= 0) {
+        /* if(self.startMenu.indexOf(zone) >= 0) {
             return self.startGame(zone);
-        }
+        } */
         if(self[zone]) {
             self[zone]();
             return "hub";
@@ -382,7 +403,7 @@ function dic (text) {
         return state_zone;
     };
     
-    self.createZone = function(zone) {
+    self.createZone = function (zone) {
         let state_zone = lib.js.copy(self.system.stateTemplate.zone);
         state_zone.name = zone;
         state_zone.id = zone;
@@ -397,7 +418,7 @@ function dic (text) {
      * @param {*} zone 
      * @param {*} floor_num 
      */
-    self.getFloor = function(zone, floor_num) {
+    self.getFloor = function (zone, floor_num) {
         let floor = zone.floors[floor_num];
         if(!floor) {
             floor = self.createFloor(zone, floor);
@@ -405,7 +426,7 @@ function dic (text) {
         return floor;
     }
 
-    self.createFloor = function(zone, floor_num) {
+    self.createFloor = function (zone, floor_num) {
         let floor = lib.js.copy(self.system.stateTemplate.floor);
         floor.floor = floor_num;
         zone.floors[floor_num] = floor;
@@ -436,7 +457,7 @@ function dic (text) {
      * roll random number and get 
      * @param {object} floor
      */
-    self.encounterRoll = function(floor) {
+    self.encounterRoll = function (floor) {
         let roll = Math.random() * (100 - 0) + 0;
         return self.encounterCheck(floor, roll);
     }
@@ -446,7 +467,7 @@ function dic (text) {
      * @param {object} floor
      * @param {number} roll 0 - 100
      */
-    self.encounterCheck = function(floor, roll) {
+    self.encounterCheck = function (floor, roll) {
         let seed = floor.searches;
         let chance = 0;
         console.log(`seed: ${seed}, roll: ${roll}`);
@@ -499,7 +520,7 @@ function dic (text) {
         return "monster";
     }
 
-    self.save = function() {
+    self.save = function () {
         localStorage.setItem('cw-save-1', JSON.stringify(self.system.state));
     }
     
@@ -508,7 +529,7 @@ function dic (text) {
      * @param {boolean} control self check to stop next passing button click
      * 
      */
-    self.message = function(control, text, return_action) {
+    self.message = function (control, text, return_action) {
         if(return_action) {
             self._messageReturnAction = return_action;
         }

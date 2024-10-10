@@ -4,21 +4,34 @@
  * simplified operations
  */
 
+['log', 'warn'].forEach(function(method) {
+    var old = console[method];
+    console[method] = function () {
+      var stack = (new Error()).stack.split(/\n/);
+      // Chrome includes a single "Error" line, FF doesn't.
+      if (stack[0].indexOf('Error') === 0) {
+        stack = stack.slice(1);
+      }
+      var args = [].slice.apply(arguments).concat([stack[1].trim()]);
+      return old.apply(console, args);
+    };
+  });
+
 var lib = {};
 
 /**
  * template element cloning
  */
-lib.clone = function(id) {
+lib.clone = function (id) {
 	return document.getElementById(id).content.cloneNode(true);
 };
 
-lib.empty = function(elm) {
+lib.empty = function (elm) {
 	var clone_node = elm.cloneNode(false);
     elm.parentNode.replaceChild(clone_node, elm);
     return clone_node;
 };
-lib.objectToHTML = function(js_object, element) {
+lib.objectToHTML = function (js_object, element) {
     var sub_element;
     var set_value;
     for(const prop in js_object) {
@@ -44,14 +57,14 @@ lib.objectToHTML = function(js_object, element) {
 };
 
 // lib.dom = {};
-// lib.dom.set = function()
+// lib.dom.set = function ()
 
 /**
  * get object by string
  * @param {Object} o object for attribute
  * @param {String} s dot notation to attribute
  */
-lib.byString = function(o, s) {
+lib.byString = function (o, s) {
     s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
     s = s.replace(/^\./, '');           // strip a leading dot
     var a = s.split('.');
@@ -75,14 +88,14 @@ lib.js = {};
 /**
  * copy an object
  */
-lib.js.copy = function(obj) {
+lib.js.copy = function (obj) {
     return JSON.parse(JSON.stringify(obj));
 };
 
 /**
  * REPLACED with Object.keys(obj)
  */
-lib.js.propertiesCount = function(obj) {
+lib.js.propertiesCount = function (obj) {
     return Object.keys(obj);
     // var count = 0;
     // for(let attribute in obj) {
@@ -107,7 +120,7 @@ lib.js.random = function (from_object) {
 };
 
 
-lib.rand = function(max, min = 0) {
+lib.rand = function (max, min = 0) {
     return Math.floor(Math.random() * max) + min;
 };
 
@@ -115,7 +128,7 @@ lib.rand = function(max, min = 0) {
  * concept function?
  * text = bracket attribute naming
  */
-lib.replace = function(text, obj) {
+lib.replace = function (text, obj) {
     //https://stackoverflow.com/questions/1493027/javascript-return-string-between-square-brackets
     
     let matches = text.match(/\[(.*?)\]/);
@@ -128,7 +141,7 @@ lib.replace = function(text, obj) {
 };
 
 lib.func = {};
-lib.func.rp = function(str, obj) {
+lib.func.rp = function (str, obj) {
     let new_str = str.replace("","");
     for(let attr in obj) {
         new_str = new_str.replace(attr, obj[attr]);
@@ -136,6 +149,6 @@ lib.func.rp = function(str, obj) {
     return new_str;
 };
 
-lib.isFunction = function(obj) {
+lib.isFunction = function (obj) {
     return typeof obj === "function";
 }
