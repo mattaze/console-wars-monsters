@@ -45,7 +45,7 @@ var cw = cw ?? {};
     self.next = function (action, value){
         console.log(`cw.next nextAction: ${self.actionNow} ${action} - ${value}`);
 
-        let menu = ""; //defunt oject, replaced with value parameter
+        let menu = ""; //defunct oject, replaced with value parameter
 
         //sep2024 replace with not using actionNow and next()
         if(self[action]) {
@@ -100,7 +100,7 @@ var cw = cw ?? {};
     
 
     self.showItems = function (callfrom) {
-        console.log("showItems inital work - 19qv")
+        console.log("showItems initial work - 19qv")
         //back to zone
         //back to hub, battle
         let nav = [{ t: "🔙 Back", action: "Goto", v: callfrom }];
