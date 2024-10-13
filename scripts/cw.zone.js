@@ -4,6 +4,11 @@
  * zone interactions
  */
 
+var g = g || {};
+g.Explore = "Explore";
+g.BossRoom = "BossRoom";
+
+
 (function() {
     //** make this a little bit more context safe */
     let self = this.zone = {};
@@ -65,9 +70,8 @@
     self.Explore = function (zone_id, floor_num) {
         //Game.Util.ShowMessages();
 
-        let zone = self.system.state.GetFloor(zone_id, floor_num);
+        let floor = self.system.state.GetFloor(zone_id, floor_num);
 
-        let floor = self.system.state.GetFloor(zone);
         let found = "you found nothing.";
         let rand = Math.random();
 

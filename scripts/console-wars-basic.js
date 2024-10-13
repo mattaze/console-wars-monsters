@@ -97,15 +97,6 @@ var cw = cw ?? {};
         {id: "items", t: "👜 Items", action:"showItems", value:"Hub"},
         {id: "monsters", t: "👹 Monsters", action:"showMonsters", value:"Hub"},
     ];
-    self.menus.zoneMenu = [
-        {id: "Explore", t: "🔍 Explore", action: "ZoneExplore", value: ""},
-        {id: "StairsUp", t: "⬆️ Take Stairs Up", action: "ZoneStairsUp", value: "", disabled: true},
-        {id: "StairsDown", t: "⬇️ Take Stairs Down", action: "ZoneStairsDown", value: "", disabled: true},
-        {id: "Boss", t: "⚔️ Fight Boss", action: "ZoneFightBoss", value: "", d: true},
-        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
-        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
-        {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
-    ];
     
 
     self.showItems = function (callfrom) {
@@ -138,10 +129,11 @@ var cw = cw ?? {};
     }
 
     
-    self.ZoneExplore = function (zone_floor) {
+    self.ZoneExplore = function (value) {
         console.log("cw.ZoneExplore - searching");
-
-        self.zone.Explore(zone_floor);
+        var values = value.split(",");
+        
+        self.zone.Explore(values[0], values[1]);
     }
 
 
