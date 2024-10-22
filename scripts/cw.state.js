@@ -119,6 +119,17 @@
         return zone;
     }
 
+    self.AddItem = function (item) {
+
+        let stored_item = self.player.items.find(itm => itm.id == item);
+        if(stored_item == undefined) {
+            stored_item = item;
+        }
+
+        item.quantity = item.quantity || 0;
+        item.quantity++;
+    }
+
 
     return self;
 }).apply(cw);

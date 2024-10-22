@@ -3,6 +3,32 @@
 (function() {
     let self = this.battle = {}
     self.system =  this;
+
+    self.menus.battleMenu = [
+        {id: "Explore", t: "🤺 Attack", action: "ZoneExplore", value: ""},
+        {id: "Items", t: "👜 Items", action:"ShowItems", value:"Zone"},
+        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
+        {id: "Leave Zone", t: "🏃‍♂️ Run", action: "BattleRun", value: "", disabled: false }
+    ];
+    
+    
+    // 2024 function
+    self.startBattle = function(action) {
+        nav = self.BattleNav
+        self.system.dom.setMenuAndDisplay("action-menu", nav);
+    }
+
+
+
+
+
+
+    // ###################################################
+    // ###################################
+    // ###################
+
+
+
     
     self.actionStack = ["menu", "action", "actionPriority", "isDead"];
     self.nextAction = "menu";

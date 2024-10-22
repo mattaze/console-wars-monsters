@@ -21,7 +21,7 @@ g.BossRoom = "BossRoom";
         {id: "StairsDown", t: "⬇️ Take Stairs Down", action: "ZoneStairsDown", value: "", disabled: true},
         {id: "BossRoom", t: "⚔️ Fight Boss", action: "ZoneFightBoss", value: "", disabled: true},
         {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
-        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
+        {id: "Monsters", t: "👹 Monsters", action:"showMonsters", value:"Zone"},
         {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
     ];
 
@@ -91,14 +91,18 @@ g.BossRoom = "BossRoom";
             floor.stairsFound = true;
         }
         else if(rand < boss_chance + stairs_chance + item_chance) {
-            found = "you found <strong>Pokeball</strong>";
+            let item = self.system.items.FindItem(zone_id, floor_num);
+
+            found = "you found <strong>" + item.name + "</strong>";
+
+            self.system.state.AddItem()
         }
         
         else if(rand < 0.95) {
             //enemy.name
             found = "you have encountered <span class='explore-encounter'>Rampage Mario</span>";
             
-            action = ""
+            action = "";
         }
         else {
             found = "you found nothing.";
@@ -110,8 +114,7 @@ g.BossRoom = "BossRoom";
             found +=  " {rand: " + rand + "}";
         }
 
-        Game.Util.ShowMessage(found, "GotoZone");
-        self.system.dom.message(found);
+        self.system.dom.messageAction(found, "GotoZone", zone_id);
     }
 
     return self;
