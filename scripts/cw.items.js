@@ -23,6 +23,12 @@ Items.Library =
     
     }
 
+    // notes: items that single version of. cannot find duplicates, and use does not remove them
+    //    use:perma permanent 
+    // 
+
+
+
     /**
      * pick an item found in location
      * @param {*} zone_id 

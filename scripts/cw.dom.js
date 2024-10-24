@@ -39,6 +39,8 @@
                 // if(action_function) {
                 //     action_function(value);
                 // }
+                
+                document.getElementById("errorlog").innerHTML = "";
 
                 return false;
             } else {

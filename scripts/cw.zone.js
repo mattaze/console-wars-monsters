@@ -71,6 +71,7 @@ g.BossRoom = "BossRoom";
         //Game.Util.ShowMessages();
 
         let floor = self.system.state.GetFloor(zone_id, floor_num);
+        floor.explored++;
 
         let found = "you found nothing.";
         let rand = Math.random();
@@ -82,39 +83,102 @@ g.BossRoom = "BossRoom";
 
         //ability to modify change of encounters. Monster or Items.
 
+        let action = "GotoZone";
+        let value = zone_id;
+
+        /*
         if(rand < boss_chance) {
+            //0 - 0.2
             found = "you found the <strong>Boss Door</strong>";
             floor.bossFound = true;
         }
         else if(rand < boss_chance + stairs_chance) {
+            // (0-0.2) + (0 if found || boss killed 0.2/0.1)
+            // 0 - 0.4
             found = "you found <span class='explore-stairs'>Stairs</span>";
             floor.stairsFound = true;
         }
         else if(rand < boss_chance + stairs_chance + item_chance) {
+            // (0-0.2) + (stairs) + item 0.1
+            // 0.1 - 0.5
             let item = self.system.items.FindItem(zone_id, floor_num);
 
             found = "you found <strong>" + item.name + "</strong>";
 
             self.system.state.AddItem()
         }
-        
         else if(rand < 0.95) {
-            //enemy.name
-            found = "you have encountered <span class='explore-encounter'>Rampage Mario</span>";
+            //remaining - 0.1 - 0.95
+            //self.system.monsters.random
             
-            action = "";
+            found = "you have encountered a MONSTER 🧌";
+
+            action = "battle";
+            value = "0"; //random encounter
+            //object pass: {}
         }
         else {
             found = "you found nothing.";
-            action = "GotoZone";
-            value = "";
         }
+        */
+
+        let monster_chance = 0.4;
+        let nothing_chance = 0.05;
+
+        // alt calulation - plug into array with weights, then rand into that
+        // removes ifs, and allows adding in other things dynamiclly
+        var event_base = [
+            ['boss_door',boss_chance], 
+            ['stairs_found', stairs_chance], 
+            ['random_monster', monster_chance],
+            ['item_found', item_chance],
+            ['nothing', nothing_chance]
+        ];
+        //expand chance to 100 - assuming smallest is 0.01
+        let events = [];
+        event_base.forEach(chance => events.push(...(Array(chance[1]*100).fill(chance[0]))));
+        
+        let event = lib.js.random(events);
+        action_result = self.events[event](floor);
+
+        // ["","",""] - found message, action, value
+        found = action_result[0];
+        action = action_result[1] || "GotoZone";
+        value = action_result[2] || zone_id;
 
         if(debug) {
             found +=  " {rand: " + rand + "}";
         }
 
-        self.system.dom.messageAction(found, "GotoZone", zone_id);
+        //
+        //  boss of 10 weight 
+        // no find 0.5 weight
+        // or iterate through adding each untill over flows
+
+        self.system.dom.messageAction(found, action, value);
+    }
+
+    self.events = {};
+    self.events.boss_door = function (floor) {
+        floor.bossFound = true;
+        return ["you found the <strong>Boss Door</strong>"];
+    };
+    self.events.stairs_found = function (floor) {
+        floor.stairsFound = true;
+        return ["you found <span class='explore-stairs'>Stairs</span>"];
+    };
+    self.events.random_monster = function (floor) {
+        return ["you have encountered a <span class='danger-text'> MONSTER " + self.system.monsters.randomEmoji()+ "'</span>"
+            ,"battle", "0"];
+    };
+    self.events.item_found = function (floor) {
+        let item = self.system.items.FindItem(zone_id, floor_num);
+        self.system.state.AddItem()
+
+        return ["you found <strong>" + item.name + "</strong>"];
+    }
+    self.events.nothing = function (floor) {
+        return found = ["you found nothing."];
     }
 
     return self;

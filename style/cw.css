@@ -9,7 +9,7 @@ body {
 }
 
 .errorlog {
-    position: absolute;
+    /* position: absolute; */
     bottom: 0px;
     background-color: lightgrey;
     width: 90vw;
