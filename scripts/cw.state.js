@@ -119,6 +119,28 @@
         return zone;
     }
 
+    /**
+     * adds item into player pack if not got any, or increases the quantity
+     * @param {item} item 
+     */
+    self.AddItem = function (item) {
+
+        let stored_item = self.player.items.find(itm => itm.id == item);
+        if(stored_item == undefined) {
+            stored_item = item;
+        }
+
+        item.quantity = item.quantity || 0;
+
+        //task: what if item can not have multiples?
+
+        item.quantity++;
+    }
+
+    self.RemoveItem = function (item) {
+        
+    }
+
 
     return self;
 }).apply(cw);

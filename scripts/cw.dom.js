@@ -10,10 +10,11 @@
     self.system = this; //engine??
     s.elms = {
         message: "message",
+        messagetext: "message-text",
         output: "output",
         button: "<button data-action='@a' data-value='@v' @d>@t</button>"
     };
-    
+
 
     /**
      * global click event handler
@@ -38,6 +39,8 @@
                 // if(action_function) {
                 //     action_function(value);
                 // }
+                
+                document.getElementById("errorlog").innerHTML = "";
 
                 return false;
             } else {
@@ -172,7 +175,8 @@
     self.message = function(text) {
         if(text) {
             //animate text load
-            document.getElementById(s.elms.message).textContent = text;
+            //document.getElementById(s.elms.message).textContent = text;
+            document.getElementById(s.elms.messagetext).innerHTML = text;
             //last display:
             s._messageLastDisplayID = document.querySelector(".output.active").id;
                         
@@ -194,7 +198,9 @@
     };
     self.messageAction = function(text, action, value) {
         self.message(text);
-        
+        let next_button = document.getElementById("message-next");
+        next_button.dataset.action = action;
+        next_button.dataset.value = value;
     }
     
     s.closeMessage = function() {
@@ -243,7 +249,7 @@
             {
                 '@a': current.action || current.id, 
                 '@t': dic(current.t || current.id),
-                '@d': current.d ? "disabled" : "",
+                '@d': current.d || current.disabled ? "disabled" : "",
                 '@v': current.value
             }
         );

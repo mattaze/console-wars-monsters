@@ -1,6 +1,7 @@
 body {
     /* font-family: 'Courier New', Courier, monospace */
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+    /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    font-family:'Roboto'
 }
 /* universal */
 .hide {
@@ -8,7 +9,7 @@ body {
 }
 
 .errorlog {
-    position: absolute;
+    /* position: absolute; */
     bottom: 0px;
     background-color: lightgrey;
     width: 90vw;
@@ -157,4 +158,10 @@ button > * {
 
 .progress-concept {
     background: -webkit-linear-gradient(left, red 30%, white 0%);
+}
+
+
+/* encounter */
+.explore-encounter {
+    color: red;
 }

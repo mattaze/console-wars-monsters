@@ -5,8 +5,14 @@
  */
 
 (function() {
-    let self = this;
+    let self = this.monsters = {};
     self._count = 0;
+
+    self.emoji = ['☠️','💩','👹','🙈','🤖','👾','👽','👻','👺','🧌','🐒','😨','😩','😱','💀','👿','😈','🤺','⚔️'];
+    self.randomEmoji = function () {
+        return lib.js.random(self.emoji);
+    }
+
     self.count = function() {
         if(self._count == 0) {
             self._count = lib.js.propertiesCount(monsters);
@@ -76,4 +82,5 @@
     };
 
     return self;
-}).apply(cw.monsters = {});
+}).apply(cw);
+//}).apply(cw.monsters = {});
