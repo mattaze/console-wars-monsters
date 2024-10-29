@@ -58,7 +58,7 @@
     window.addEventListener("click", self.clickEvent, false);
 
     self.error = function (message) {
-        document.getElementById("errorlog").innerHTML = error.message;
+        document.getElementById("errorlog").innerHTML = message;
     }
 
     /**

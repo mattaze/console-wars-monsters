@@ -49,7 +49,7 @@
         self.system.state.player.monsters.push(m2);
 
         self.system.state.player.items = [
-            {id: "HealingPotion", title:"Healing Potion", desc:"", type:"healing item", impact:"hp", mod:"+20", target:"all", quantity:2},
+            {id: "HealingPotion", name:"Healing Potion", desc:"", type:"healing item", impact:"hp", mod:"+20", target:"all", quantity:2},
         ];
     };
 

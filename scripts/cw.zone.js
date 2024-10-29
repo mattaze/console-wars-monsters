@@ -63,10 +63,19 @@ g.BossRoom = "BossRoom";
         nav.find(z => z.id == "StairsDown").disabled = !floor.stairsFound;
         nav.find(z => z.id == "StairsUp").disabled = floor.id == 0;
         nav.find(z => z.id == "Explore").value = zone.id + "," + floor.id;
+        nav.find(z => z.id)
+        lib.js.find(nav,"id","Items").value = ["Zone", zone.id].join();
+        lib.js.find(nav,"id","Monsters").value = ["Zone", zone.id].join();
         
         return nav;
     }
 
+    self.system.ZoneExplore = function (value) {
+        console.log("cw.ZoneExplore - searching");
+        var values = value.split(",");
+        
+        self.zone.Explore(values[0], values[1]);
+    };
     self.Explore = function (zone_id, floor_num) {
         //Game.Util.ShowMessages();
 

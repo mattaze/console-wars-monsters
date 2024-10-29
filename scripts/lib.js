@@ -105,6 +105,16 @@ lib.js.propertiesCount = function (obj) {
 };
 
 /**
+ * find in array of objects based on field and value
+ * @param {*} array 
+ * @param {*} field 
+ * @param {*} value 
+ */
+lib.js.find = function (array, field, value) {
+    return array.find(z => z[field] == value);
+}
+
+/**
  * get random item in array (or property of object) (because adding to Array.prototype apparently not a good thing to do?)
  * @param {Object} object or array
  */

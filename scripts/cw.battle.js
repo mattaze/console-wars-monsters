@@ -4,6 +4,7 @@
     let self = this.battle = {}
     self.system =  this;
 
+    self.menus = {};
     self.menus.battleMenu = [
         {id: "Explore", t: "🤺 Attack", action: "ZoneExplore", value: ""},
         {id: "Items", t: "👜 Items", action:"ShowItems", value:"Zone"},

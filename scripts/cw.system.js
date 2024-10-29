@@ -98,17 +98,30 @@ var cw = cw ?? {};
         {id: "monsters", t: "👹 Monsters", action:"showMonsters", value:"Hub"},
     ];
     
+    self.menus.goto = {
+        "Hub": "GotoHub",
+        "Zone": "GotoZoneX"
+    }
 
-    self.showItems = function (callfrom) {
-        console.log("showItems initial work - 19qv")
-        //back to zone
-        //back to hub, battle
-        let nav = [{ t: "🔙 Back", action: "Goto", v: callfrom }];
-        
-        self.state.player.items.forEach(item => nav.push({t:item.name, action:"showItem", value: item.id, callfrom: callfrom}));
+    self.Goto = function (menu_name) {
+        let values = menu_name.split(",");
+        let map = self.menus.goto[values[0]];
+        if(map) {
+            self[map](...values);
+        }
+        else {
+            self.dom.error("missing Goto - " + menu_name);
+        }
+    }
+
+    self.GotoHub = function () {
+        self.dom.setMenuAndDisplay("action-menu", self.menus.hubMenu);
+    }
+    self.GotoZoneX = function (goto, zone_id) {
+        self.GotoZone(zone_id);
+    }
+
     
-        self.dom.setMenuAndDisplay("action-menu", nav);
-    };
     self.showItem = function (item_id, callfrom) {
         console.log("showItem: " + item_id + " callfrom: " + callfrom);
     }
@@ -117,7 +130,7 @@ var cw = cw ?? {};
         //self.monsters.showMonster();
         
         //{id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
-        let nav = [{ t: "🔙 Back", action: "Goto", v: callfrom }];
+        let nav = [{ t: "🔙 Back", action: "Goto", value: callfrom }];
         self.state.player.monsters.forEach(mon => nav.push({t:mon.name, action: "showMonster", value: mon.uid, callfrom: callfrom}));
         
         self.dom.setMenuAndDisplay("action-menu", nav);
@@ -129,14 +142,6 @@ var cw = cw ?? {};
     }
 
     
-    self.ZoneExplore = function (value) {
-        console.log("cw.ZoneExplore - searching");
-        var values = value.split(",");
-        
-        self.zone.Explore(values[0], values[1]);
-    }
-
-
 
     self.startBattle = function () {
         self.battle.load();
