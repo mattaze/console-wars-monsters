@@ -346,25 +346,25 @@ var SpriteSheets = {
 //if type is not defined - normal
 //m: move type : pp Physical  ep : Elemental
 var attacks = {
-    "Quick Attack": {d: "User attacks first.", m: "pp", p: 40, e: 20, a:100, mod: {priority: 1}},
-    "Swift": {d: "User attacks first.", m: "pp", p: 60, e: 40, a:130, mod:{priority: 1} },
-    "Rampage": {d: "Mindlessly attacks for a few turns", m: "pp", p: 110, e: 70, a: 70, mod:{repeat: [2, 6]}},
-    "Slow Attack": {d:"User goes last.", m: "pp", p: 40, e: 0, a: 100, mod: {priority: 2}},
-    "Tackle": {d: "A full-body charge attack.", m:"pp", p:40, e: 10, a: 100},
+    "Quick Attack": {name: "Quick Attack", d: "User attacks first.", m: "pp", p: 40, e: 20, a:100, mod: {priority: 1}},
+    "Swift": {name: "Swift", d: "User attacks first.", m: "pp", p: 60, e: 40, a:130, mod:{priority: 1} },
+    "Rampage": {name: "Rampage", d: "Mindlessly attacks for a few turns", m: "pp", p: 110, e: 70, a: 70, mod:{repeat: [2, 6]}},
+    "Slow Attack": {name: "Slow Attack", d:"User goes last.", m: "pp", p: 40, e: 0, a: 100, mod: {priority: 2}},
+    "Tackle": {name: "Tackle", d: "A full-body charge attack.", m:"pp", p:40, e: 10, a: 100},
     
-    "Wing Attack": {d: "Strikes the target with wings.", m:"pp", t: d.t.f, p: 60, e:35, a: 100 },
-    "Electric Ball": {t: "Electric", m:"ep", p: 40, e: 25, a: 90},
-    "Bite":  {t: "Dark", m: "pp", p: 40, e: 25, a: 90},
+    "Wing Attack": {name: "Wing Attack", d: "Strikes the target with wings.", m:"pp", t: d.t.f, p: 60, e:35, a: 100 },
+    "Electric Ball": {name: "Electric Ball", t: "Electric", m:"ep", p: 40, e: 25, a: 90},
+    "Bite":  {name: "Bite", t: "Dark", m: "pp", p: 40, e: 25, a: 90},
     
-    "Evade": {d: "Attempt to dodge", m:"pp", p:"0", e: -20, a:0, mod:{boost:"ss", repeat: 1, add:"e"}},
-    "Defense Stance": {d: "Brace in defense", m: "self", e: 30, mod:{boost: "pd", repeat: 1, add:"e"}},
+    "Evade": {name: "Evade", d: "Attempt to dodge", m:"pp", p:"0", e: -20, a:0, mod:{boost:"ss", repeat: 1, add:"e"}},
+    "Defense Stance": {name: "Defense Stance", d: "Brace in defense", m: "self", e: 30, mod:{boost: "pd", repeat: 1, add:"e"}},
     
-    "Bad Breath": {t: "Poison", m:"ep", p: 50, e: 20, a: 70, mod:{poison:1}},
-    "Zombie Bite": {d:"Chance to convert to wild zombie on kill.", t: "Zombie", m:"pp", p: 20, e: 40, a: 90, mod:{convert:"wild.zombie"}},
+    "Bad Breath": {name: "Bad Breath", t: "Poison", m:"ep", p: 50, e: 20, a: 70, mod:{poison:1}},
+    "Zombie Bite": {name: "Zombie Bite", d:"Chance to convert to wild zombie on kill.", t: "Zombie", m:"pp", p: 20, e: 40, a: 90, mod:{convert:"wild.zombie"}},
     
-    "Drag": {t: "Electric", m:"ep", p: 30, e: 30, a: 70},
-    "Click": {t: "Electric", m:"ep", p: 40, e: 35, a: 90},
-    "Double Click": {t: "Electric", m:"ep", p: 60, e: 40, a: 90, mod:{multi:2}},
+    "Drag": {name: "Drag", t: "Electric", m:"ep", p: 30, e: 30, a: 70},
+    "Click": {name: "Click", t: "Electric", m:"ep", p: 40, e: 35, a: 90},
+    "Double Click": {name: "Double Click", t: "Electric", m:"ep", p: 60, e: 40, a: 90, mod:{multi:2}},
 };
 
 //attack that critical if target.p is low.

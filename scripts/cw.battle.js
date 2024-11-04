@@ -28,7 +28,13 @@
         self.system.dom.setMenuAndDisplay("action-menu", nav);
     }
     self.system.battleAttacksMenu = function () {
-        let nav = self._player.am.map(move => ({t: move, action: "battleAttack", value: move}));
+        let nav = self._player.am.map(move => 
+        {
+            let move_info = self.getMoveInfo(self._player, move);
+            return {t: move_info.name + "(⚡+ " + move_info.e + ")", 
+                action: "battleAttack", value: move, disabled: self.attackCheck(move) }
+        });
+
         nav.push({t: "🔙 Back", action: "battleMenu"});
         self.system.dom.setMenuAndDisplay("action-menu", nav);
         //cw.dom.setMenu('battle-menu-attack', self._player.am);
@@ -241,6 +247,11 @@
         }
     };
     
+    /**
+     * does the character have enough energy to use
+     * @param {string} move 
+     * @returns {boolean} can use
+     */
     self.attackCheck = function(move) {
         let attack_info = self.getMoveInfo(self._player, move);
         if(attack_info) {
@@ -357,9 +368,6 @@
      * @param {*} move  
      */
     self.attack = function(move) {
-        if(!move) {
-            return "attack";
-        }
         //CAN player use move?
         let can_use = self.attackCheck(move);
         if(can_use == false) {
