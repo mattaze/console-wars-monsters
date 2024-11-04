@@ -5,7 +5,8 @@
  */
 
 (function() {
-    let self = this;
+    let self = this.sounds = {};
+    self.system = this;
     self.background = null;
     
     self.types = {
@@ -76,4 +77,4 @@
     };
 
     return self;
-}).apply(cw.sounds = {});
+}).apply(cw);

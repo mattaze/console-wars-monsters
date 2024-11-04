@@ -143,12 +143,6 @@ var cw = cw ?? {};
 
     
 
-    self.startBattle = function () {
-        self.battle.load();
-
-        self.actionNow = "battle";
-        return "battle";
-    };
 
     self.NewGame = function () {
         self.player.load();

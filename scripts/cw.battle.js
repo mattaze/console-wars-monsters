@@ -6,7 +6,7 @@
 
     self.menus = {};
     self.menus.battleMenu = [
-        {id: "Explore", t: "🤺 Attack", action: "ZoneExplore", value: ""},
+        {id: "battleMenu", t: "🤺 Attack", action: "battleAttacksMenu", value: ""},
         {id: "Items", t: "👜 Items", action:"ShowItems", value:"Zone"},
         {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
         {id: "Leave Zone", t: "🏃‍♂️ Run", action: "BattleRun", value: "", disabled: false }
@@ -14,11 +14,56 @@
     
     
     // 2024 function
-    self.startBattle = function(action) {
-        nav = self.BattleNav
-        self.system.dom.setMenuAndDisplay("action-menu", nav);
+    self.system.startBattle = function (val) {
+        self.load();
+
+
+        //self.message(true, , "battleMenu")
+
+        cw.dom.messageAction(self._enemy.id + " approaches!", "battleMenu");
     }
 
+    self.system.battleMenu = function (val) {
+        nav = self.menus.battleMenu;
+        self.system.dom.setMenuAndDisplay("action-menu", nav);
+    }
+    self.system.battleAttacksMenu = function () {
+        let nav = self._player.am.map(move => ({t: move, action: "battleAttack", value: move}));
+        nav.push({t: "🔙 Back", action: "battleMenu"});
+        self.system.dom.setMenuAndDisplay("action-menu", nav);
+        //cw.dom.setMenu('battle-menu-attack', self._player.am);
+    }
+
+    self.system.battleAttack = function (move) {
+        self.attack(move);
+    }
+
+
+    /**
+     * start battle
+     */
+    self.load = function(zone_info) {
+        self._player = cw.state.player.monsters[0];
+        if(zone_info) {
+         //   self.zoneInfo = zone_info || {};
+        }
+        
+        //self._enemy = self.system.monsters.random(self.zoneInfo.floor);
+        self._enemy = self.system.monsters.random();
+        
+        document.querySelector('.right-column').classList.remove('hide');
+        self.update();
+        
+        //cw.dom.setDisplay("battle-menu-main");
+        
+        self.system.sounds.play(cw.sounds.types.other.encounter);
+        
+        //self.nextAction = "message";
+        //return self.message(true, self._enemy.id + " approaches!", "menu");
+        
+        //set menu
+        //self.nextAction = "menu";
+    };
 
 
 
@@ -118,31 +163,6 @@
 
     };
 
-    /**
-     * start battle
-     */
-    self.load = function(zone_info) {
-        self._player = cw.state.player.monsters[0];
-        if(zone_info) {
-            self.zoneInfo = zone_info || {};
-        }
-        
-        self._enemy = cw.monsters.random(self.zoneInfo.floor);
-        
-        
-        document.querySelector('.right-column').classList.remove('hide');
-        self.update();
-        
-        cw.dom.setDisplay("battle-menu-main");
-        
-        cw.sounds.play(cw.sounds.types.other.encounter);
-        
-        self.nextAction = "message";
-        return self.message(true, self._enemy.id + " approaches!", "menu");
-        
-        //set menu
-        //self.nextAction = "menu";
-    };
 
     /**
      * update dom info

@@ -20,8 +20,8 @@ g.BossRoom = "BossRoom";
         {id: "StairsUp", t: "⬆️ Take Stairs Up", action: "ZoneStairsUp", value: "", disabled: true},
         {id: "StairsDown", t: "⬇️ Take Stairs Down", action: "ZoneStairsDown", value: "", disabled: true},
         {id: "BossRoom", t: "⚔️ Fight Boss", action: "ZoneFightBoss", value: "", disabled: true},
-        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"},
-        {id: "Monsters", t: "👹 Monsters", action:"showMonsters", value:"Zone"},
+        {id: "Items", t: "👜 Items", action:"showItems", value:"Zone"}, // value = "Zone,`zone-id`"
+        {id: "Monsters", t: "👹 Monsters", action:"showMonsters", value:"Zone"}, // value = "Zone,`zone-id`"
         {id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
     ];
 
@@ -63,7 +63,6 @@ g.BossRoom = "BossRoom";
         nav.find(z => z.id == "StairsDown").disabled = !floor.stairsFound;
         nav.find(z => z.id == "StairsUp").disabled = floor.id == 0;
         nav.find(z => z.id == "Explore").value = zone.id + "," + floor.id;
-        nav.find(z => z.id)
         lib.js.find(nav,"id","Items").value = ["Zone", zone.id].join();
         lib.js.find(nav,"id","Monsters").value = ["Zone", zone.id].join();
         
@@ -74,7 +73,7 @@ g.BossRoom = "BossRoom";
         console.log("cw.ZoneExplore - searching");
         var values = value.split(",");
         
-        self.zone.Explore(values[0], values[1]);
+        self.Explore(values[0], values[1]);
     };
     self.Explore = function (zone_id, floor_num) {
         //Game.Util.ShowMessages();
@@ -148,7 +147,7 @@ g.BossRoom = "BossRoom";
         event_base.forEach(chance => events.push(...(Array(chance[1]*100).fill(chance[0]))));
         
         let event = lib.js.random(events);
-        action_result = self.events[event](floor);
+        action_result = self.events[event](zone_id, floor);
 
         // ["","",""] - found message, action, value
         found = action_result[0];
@@ -168,25 +167,25 @@ g.BossRoom = "BossRoom";
     }
 
     self.events = {};
-    self.events.boss_door = function (floor) {
+    self.events.boss_door = function (zone_id, floor) {
         floor.bossFound = true;
         return ["you found the <strong>Boss Door</strong>"];
     };
-    self.events.stairs_found = function (floor) {
+    self.events.stairs_found = function (zone_id, floor) {
         floor.stairsFound = true;
         return ["you found <span class='explore-stairs'>Stairs</span>"];
     };
-    self.events.random_monster = function (floor) {
+    self.events.random_monster = function (zone_id, floor) {
         return ["you have encountered a <span class='danger-text'> MONSTER " + self.system.monsters.randomEmoji()+ "'</span>"
-            ,"battle", "0"];
+            ,"startBattle", "0"];
     };
-    self.events.item_found = function (floor) {
-        let item = self.system.items.FindItem(zone_id, floor_num);
-        self.system.state.AddItem()
+    self.events.item_found = function (zone_id, floor) {
+        let item = self.system.items.FindItem(zone_id, floor.id);
+        self.system.state.AddItem(item);
 
         return ["you found <strong>" + item.name + "</strong>"];
     }
-    self.events.nothing = function (floor) {
+    self.events.nothing = function (zone_id, floor) {
         return found = ["you found nothing."];
     }
 

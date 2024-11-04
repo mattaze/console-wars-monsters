@@ -130,11 +130,11 @@
             stored_item = item;
         }
 
-        item.quantity = item.quantity || 0;
+        stored_item.quantity = item.quantity || 0;
 
         //task: what if item can not have multiples?
 
-        item.quantity++;
+        stored_item.quantity++;
     }
 
     self.RemoveItem = function (item) {
