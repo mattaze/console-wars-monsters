@@ -37,42 +37,15 @@ var cw = cw ?? {};
     let self = this;
 
 
-    /** what mode system currently in : Battle, World, - used for action referencing and which namespace to call */
-    self.mode = "battle";
-    //self.actionNow = "battle";
-    self.actionNow = "menu";
-    self.actionStack = ["overworld", "menu", "battle"];
     self.next = function (action, value){
-        console.log(`cw.next nextAction: ${self.actionNow} ${action} - ${value}`);
-
-        let menu = ""; //defunct oject, replaced with value parameter
+        console.log(`cw.system.next ${action} - ${value}`);
 
         //sep2024 replace with not using actionNow and next()
         if(self[action]) {
             self[action](value);
         }
         else {
-            console.log("calling the old next system - x6543");
-            if(menu) {
-                self[menu][action]();
-                return;
-            }
-
-            let next_action = self[self.actionNow].next(action);
-            if(next_action) {
-                //move to next actionStack
-            //    self.actionNow = self.actionStack.push(self.actionNow);
-            //    self.actionStack.shift();
-                self.actionNow = next_action;
-                //call actionNow load
-                if(self.actionNow == "battle") {
-                    self[self.actionNow].load(self.menu.zoneInfo);
-                }
-                self[self.actionNow].load();
-            }
-            else {
-                
-            }
+            self.dom.error(`no action found: ${action}, ${value}`)
         }
     };
 

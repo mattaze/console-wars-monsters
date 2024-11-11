@@ -20,7 +20,7 @@
 
         //self.message(true, , "battleMenu")
 
-        cw.dom.messageAction(self._enemy.id + " approaches!", "battleMenu");
+        self.system.dom.messageAction(self._enemy.id + " approaches!", "battleMenu");
     }
 
     self.system.battleMenu = function (val) {
@@ -32,12 +32,12 @@
         {
             let move_info = self.getMoveInfo(self._player, move);
             return {t: move_info.name + "(⚡+ " + move_info.e + ")", 
-                action: "battleAttack", value: move, disabled: self.attackCheck(move) }
+                action: "battleAttack", value: move, disabled: !self.attackCheck(move) }
         });
 
         nav.push({t: "🔙 Back", action: "battleMenu"});
         self.system.dom.setMenuAndDisplay("action-menu", nav);
-        //cw.dom.setMenu('battle-menu-attack', self._player.am);
+        //self.system.dom.setMenu('battle-menu-attack', self._player.am);
     }
 
     self.system.battleAttack = function (move) {
@@ -49,7 +49,7 @@
      * start battle
      */
     self.load = function(zone_info) {
-        self._player = cw.state.player.monsters[0];
+        self._player = self.system.state.player.monsters[0];
         if(zone_info) {
          //   self.zoneInfo = zone_info || {};
         }
@@ -60,9 +60,9 @@
         document.querySelector('.right-column').classList.remove('hide');
         self.update();
         
-        //cw.dom.setDisplay("battle-menu-main");
+        //self.system.dom.setDisplay("battle-menu-main");
         
-        self.system.sounds.play(cw.sounds.types.other.encounter);
+        self.system.sounds.play(self.system.sounds.types.other.encounter);
         
         //self.nextAction = "message";
         //return self.message(true, self._enemy.id + " approaches!", "menu");
@@ -123,8 +123,8 @@
         
         if(action) {
             //attack
-            cw.dom.setMenu('battle-menu-attack', self._player.am);
-            cw.dom.setDisplay('battle-menu-attack');
+            self.system.dom.setMenu('battle-menu-attack', self._player.am);
+            self.system.dom.setDisplay('battle-menu-attack');
             return "attack";
         }
     };
@@ -174,9 +174,9 @@
      * update dom info
      */
     self.update = function() {
-        cw.dom.update(self._player, "player");
+        self.system.dom.update(self._player, "player");
         if(self._enemy) {
-            cw.dom.update(self._enemy, "enemy");
+            self.system.dom.update(self._enemy, "enemy");
         }
     };
     
@@ -235,7 +235,7 @@
         }
         
         if(control === true, text) {
-            cw.dom.message(text);
+            self.system.dom.message(text);
             return "message";
         }
         else {
@@ -243,7 +243,7 @@
             //call message if finished
             // click while loading text will finish text load. dom.message returns true
             // another click - message might still return true if only 1 page of text has been shown so far.
-            return cw.dom.message() ? "message" : self._messageReturnAction;
+            return self.system.dom.message() ? "message" : self._messageReturnAction;
         }
     };
     
@@ -371,6 +371,7 @@
         //CAN player use move?
         let can_use = self.attackCheck(move);
         if(can_use == false) {
+            //attack is disabled so cannot click - so unlikly to hit this
             return self.message(true, self.text.lowEnergy, "attack");
         }
         
@@ -404,7 +405,7 @@
         let enemy_text = self.randomText(self._enemy.id, player_action);
         enemy_text = enemy_text.replace("<p>", "<p class='enemy-text'>");
         
-        cw.output.elm.innerHTML = player_text + enemy_text;
+        self.system.output.elm.innerHTML = player_text + enemy_text;
         
         ///////////////
         
@@ -413,18 +414,18 @@
         
         //End condition
         if(self._enemy.h <= 0) {
-            cw.output.elm.innerHTML = self.text.down.replace('[name]', self._enemy.id);
-            self._enemy = cw.monsters.random();
+            self.system.output.elm.innerHTML = self.text.down.replace('[name]', self._enemy.id);
+            self._enemy = self.system.monsters.random();
         }
         if(self._player.h <= 0) {
-            cw.output.elm.innerHTML = self.text.down.replace('[name]', self._player.name);
-            self._player = cw.monsters.random();
+            self.system.output.elm.innerHTML = self.text.down.replace('[name]', self._player.name);
+            self._player = self.system.monsters.random();
             self._player.name = self._player.id;
         }
         
         self.update();
         
-        cw.dom.setDisplay(cw.dom.elms.output);
+        self.system.dom.setDisplay(self.system.dom.elms.output);
         return "playersMove";
         */
     };
@@ -449,8 +450,8 @@
     };
     
     self.domText = function(text) {
-        cw.output.elm.insertAdjacentHTML('beforeend', text);
-        cw.output.elm.scrollTop = cw.output.elm.scrollHeight;
+        self.system.output.elm.insertAdjacentHTML('beforeend', text);
+        self.system.output.elm.scrollTop = self.system.output.elm.scrollHeight;
     };
     
     /**
@@ -460,7 +461,7 @@
         if(!self._runActionNext) {
             self._runActionTurn = self.actionOrder.shift();
             if(!self._runActionTurn) {
-                cw.dom.setDisplay("battle-menu-main");
+                self.system.dom.setDisplay("battle-menu-main");
                 
                 //energy recovery:
                 self.energyRecoveryAuto();
@@ -474,7 +475,7 @@
             return "menu:menu";
         }
         
-        cw.dom.setDisplay(cw.dom.elms.output);
+        self.system.dom.setDisplay(self.system.dom.elms.output);
         
         if(self._runActionNext == "using") {
             let use_move_txt = lib.func.rp(self.text.attack_used, 
@@ -493,7 +494,7 @@
                 
                 self.domText(self._pText(self._runActionTurn.user, "hit"));
                 
-                cw.sounds.random();
+                self.system.sounds.random();
                 
                 if(self._runActionTurn.effective != 1) {
                     let effect_text = "<span class='effective effective-super'>" + self.text.effective_true + "</span>";
@@ -507,15 +508,14 @@
                     self.domText(self._pText(self._runActionTurn.user, crit_text));
                 }
                 
-                if(cw.settings.battleNumbers) {
+                if(self.system.settings.battleNumbers) {
                     self.domText(self._pText(self._runActionTurn.user, "Damage: " + self._runActionTurn.damage));
                 }
             }
             else {
-                cw.sounds.miss();
+                self.system.sounds.miss();
                 
                 //no hit
-                //cw.output.write()
                 let missed_text = self.text.missed.replace('@a', self._runActionTurn.monster.name || self._runActionTurn.monster.id);
                 missed_text = self._pText(self._runActionTurn.user, missed_text);
                 //player_text = player_text.replace("<p>", "<p class='player-text'>");
@@ -539,7 +539,7 @@
             
             let approaching = "";
             if(self._player.h <= 0) {
-                //self._player = cw.monsters.random();
+                //self._player = self.system.monsters.random();
                 //self._player.name = self._player.id;
                 //approaching = self._player.name;
                 self.domText(self._pText("player", "GAME OVER") );
@@ -553,7 +553,7 @@
             
             
             self.domText(self._pText("player", "XP gain value goes here.") );
-            cw.sounds.play(cw.sounds.types.other.encounter);
+            self.system.sounds.play(self.system.sounds.types.other.encounter);
                 
             self._runActionNext = "battle-over";
         }
@@ -564,38 +564,13 @@
     
     self.playersMove = function() {
         //output is open
-        cw.dom.setDisplay("battle-menu-main");
+        self.system.dom.setDisplay("battle-menu-main");
         return "menu";
     };
     
     self.playerAction = function(action, value) {
         return new self.obj.action(action, value);
     };
-    
-    // self.randomText = function(name, action) {
-    //     let attack_text = [];
-    //     attack_text.push(
-    //         self.text.attack_used
-    //         .replace("[name]", name)
-    //         .replace("[attack]", action.value));
-            
-    //     let effectiveness = Math.random();
-    //     if(effectiveness < 0.6) {
-            
-    //     }
-    //     else if(effectiveness < 0.8) {
-    //         attack_text.push("<span class='effective effective-super'>" + self.text.effective_true + "</span>");
-    //     }
-    //     else {
-    //         attack_text.push("<span class='effective effective-not'>" + self.text.effective_false + "</span>");
-    //     }
-        
-    //     if(effectiveness > 0.95) {
-    //         attack_text.push("<span class='critical'>" + self.text.critical + "</span>");
-    //     }
-        
-    //     return "<p>" + attack_text.join("<br/>") + "</p>";
-    // };
     
     /**
      * roll action for enemy
@@ -616,5 +591,4 @@
     };
 
     return self;
-//}).apply(cw.battle = {});
 }).apply(cw);
