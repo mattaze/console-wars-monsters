@@ -8,6 +8,7 @@
     //** make this a little bit more context safe */
     let self = this.output = {};
     self.elm = document.getElementById("output-text");
+    self.nextButton = document.getElementById("output-next");
 
     /** variable is exposed */
     self.public_variable = null;

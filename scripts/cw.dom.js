@@ -45,7 +45,7 @@
                 return false;
             } else {
                 //too next text dialog.
-                self.system.next();
+                //self.system.next();
             }
         }
         catch(error) {
@@ -59,6 +59,7 @@
 
     self.error = function (message) {
         document.getElementById("errorlog").innerHTML = message;
+        console.error(message);
     }
 
     /**
@@ -201,6 +202,59 @@
         let next_button = document.getElementById("message-next");
         next_button.dataset.action = action;
         next_button.dataset.value = value;
+    }
+
+
+    self.system.messageRollNext = function () {
+        var message = messageRollData.messages.shift();
+        
+        //if the last - action = next
+        // play sounds option [message, action, sound]
+        // if not array - play and next
+        self.system.output.elm.insertAdjacentHTML('beforeend', message);
+        self.system.output.elm.scrollTop = self.system.output.elm.scrollHeight;
+
+        let button = self.system.output.nextButton;
+        button.dataset.action = "messageRollNext";
+
+        if(messageRollData.messages.length == 0) {
+            button.dataset.action = self.messageRollData.LastAction;
+            button.dataset.value = self.messageRollData.LastValue;
+        }
+    }
+
+    self._messageRollData = {
+        messages: [],
+        lastAction: "",
+        lastValue: "",
+    };
+
+    /**
+     * message role takes list of messages for the Output roll
+     * last is what action to set button at end.
+     * @param {Array} messages 
+     */
+    self.messageRoll = function (messages, last_action, last_action_value) {
+        self._messageRollData = {
+            messages: messages,
+            lastAction: last_action,
+            lastValue: last_action_value
+        }
+        
+        self.system.dom.setDisplay(self.system.dom.elms.output);
+
+        self.system.messageRollNext();
+    }
+
+    self.messageRollAction = function (message, action, value, sound) {
+        //todo sound
+        self.system.dom.setDisplay(self.system.dom.elms.output);
+
+        self.system.output.elm.insertAdjacentHTML('beforeend', message);
+        self.system.output.elm.scrollTop = self.system.output.elm.scrollHeight;
+        let button = self.system.output.nextButton;
+        button.dataset.action = action;
+        button.dataset.value = value;
     }
     
     s.closeMessage = function() {
