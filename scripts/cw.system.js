@@ -115,6 +115,10 @@ var cw = cw ?? {};
     }
 
     
+    self.GameOver = function () {
+        self.dom.messageAction("GAME OVER", load);
+    }
+    
 
 
     self.NewGame = function () {

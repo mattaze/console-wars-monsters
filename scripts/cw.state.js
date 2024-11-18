@@ -141,6 +141,13 @@
         
     }
 
+    /**
+     * @returns {boolean} 
+     */
+    self.HasBattleReadyMonsters = function () {
+        return self.player.monster.find(mon => mon.h > 0);
+    }
+
 
     return self;
 }).apply(cw);
