@@ -379,56 +379,17 @@
         let player_action = self.rollAttack(self._player, move, "player", self._enemy);
         let enemy_action = self.enemyAction();
         
-        self.actionOrder = [player_action, enemy_action];
+        let actions = self.attackPrioity(player_action, enemy_action);
         
         //TODO decide who goes next?
         
         //for now - run playersMove
         //self.runActions(true);
-        self.runActions3(self.actionOrder);
-        
-        
-        //return "runActions";
-        
-        
-        /*
-        //basic testing attack
-        self._enemy.h = self._enemy.h - 6;
-        self._player.h -= Math.floor(Math.random()*6);
-        
-        
-        // let player_action = self.playerAction("attack", move);
-        // let enemy_action = self.enemyAction();
-        
-        let player_text = self.randomText(self._player.name, player_action);
-        player_text = player_text.replace("<p>", "<p class='player-text'>");
-        
-        let enemy_text = self.randomText(self._enemy.id, player_action);
-        enemy_text = enemy_text.replace("<p>", "<p class='enemy-text'>");
-        
-        self.system.output.elm.innerHTML = player_text + enemy_text;
-        
-        ///////////////
-        
-        
-        //block group
-        
-        //End condition
-        if(self._enemy.h <= 0) {
-            self.system.output.elm.innerHTML = self.text.down.replace('[name]', self._enemy.id);
-            self._enemy = self.system.monsters.random();
-        }
-        if(self._player.h <= 0) {
-            self.system.output.elm.innerHTML = self.text.down.replace('[name]', self._player.name);
-            self._player = self.system.monsters.random();
-            self._player.name = self._player.id;
-        }
-        
-        self.update();
-        
-        self.system.dom.setDisplay(self.system.dom.elms.output);
-        return "playersMove";
-        */
+        self.runActions3(actions);
+    };
+
+    self.attackPrioity = function (player_action, enemy_action) {
+        return [player_action, enemy_action];
     };
     
     self._runActionTurn = {};
@@ -456,65 +417,6 @@
     };
     
 
-    self.runActions2 = function (actions) {
-        let goto_action = "battleMenu";
-        let goto_value = "";
-
-        //construct attack, response, 
-            // X used _
-            // that was ___ effective
-            // Is Y still up
-            // Y used __
-            // 
-
-     //   self.system.dom.setDisplay(self.system.dom.elms.output);
-
-        //set action order - which priority
-        //todo
-        
-        //assuming 2 actions:
-
-        let messages = [
-            // array of message and next button result?
-            // ["Mario used punch.", "next message",   optional Sound]
-            // ["Mario is dead. Game over", "go to start"]
-        ];
-
-        // use action
-        let action = actions.shift();
-
-        self.useAction(action, messages);
-            
-        //
-        // hit result
-        self.actionHit(action, messages);
-
-        self.actionIsDead(action, messages);
-        
-        //is target dead
-        //let target_dead = self._runActionTurn.target.h <= 0 ? "target-dead" : undefined; 
-        
-        
-        // this should update after showing damage message
-        self.update();
-
-        
-
-        goto_action = "battleCharacterSwitch";
-
-        //if still alive
-        //goto battleMenu - s
-
-        //self.domText ====
-        //    self.system.output.elm.insertAdjacentHTML('beforeend', text);
-        //    self.system.output.elm.scrollTop = self.system.output.elm.scrollHeight;
-
-        self.system.dom.messageRoll(messages, goto_action);
-
-        //show message
-        // self.domTexT("");
-    }
-
     self._actions = [];
     self._currentAction = {};
     self.runActions3 = function (actions) {
@@ -528,7 +430,7 @@
         else {
             self._currentAction = action;
 
-            let message = self.useAction3(action);
+            let message = self.useAction(action);
             self.system.dom.messageRollAction(message, "battleActionHit");
         }
     }
@@ -546,6 +448,12 @@
             nextAction = "battleActionImpact";
             
             self.system.sounds.random();
+
+            
+            // if(self.system.settings.battleNumbers) {
+            //     //self.domText(self._pText(action.user, "Damage: " + action.damage));
+            //     messages.push([self._pText(action.user, "Damage: " + action.damage), "next"]);
+            // }
             
         }
         else {
@@ -664,17 +572,7 @@
         }
     }
 
-    self.useAction = function (action, messages) {
-        let use_move_txt = lib.func.rp(self.text.attack_used, 
-            {"@a": action.monster.name || action.monster.id, "@m": action.move.n});
-        //self.domText(self._pText(action.user, use_move_txt));
-        let use_message = self._pText(action.user, use_move_txt);
-        messages.push(use_message);
-        
-        //energy cost
-        action.monster.e -= action.move.e;
-    }
-    self.useAction3 = function (action) {
+    self.useAction = function (action) {
         let use_move_txt = lib.func.rp(self.text.attack_used, 
             {"@a": action.monster.name || action.monster.id, "@m": action.move.n});
         //self.domText(self._pText(action.user, use_move_txt));
@@ -687,45 +585,6 @@
 
 
 
-    // _runActionTurn = action
-    self.actionHit = function (action, messages) {
-        if(action.hit) {
-            let hp = action.target.h;
-            action.target.h = action.target.h - action.damage;
-            
-            //self.domText(self._pText(action.user, "hit"));
-            message.push([self._pText(action.user, "hit"), "next", "sound option"]); //
-            
-            self.system.sounds.random();
-            
-            let effective_message = effectiveMessage(action, messages);
-            messages.push(effective_message);
-            
-            if(action.critical) {
-                let crit_text ="<span class='critical'>" + self.text.critical + "</span>";
-                //self.domText(self._pText(action.user, crit_text));
-                messages.push([self._pText(action.user, crit_text), "next"]);
-            }
-            
-            if(self.system.settings.battleNumbers) {
-                //self.domText(self._pText(action.user, "Damage: " + action.damage));
-                messages.push([self._pText(action.user, "Damage: " + action.damage), "next"]);
-            }
-        }
-        else {
-            //no hit
-            self.system.sounds.miss();
-            
-            let missed_text = self.text.missed.replace('@a', action.monster.name || action.monster.id);
-            missed_text = self._pText(action.user, missed_text);
-            //player_text = player_text.replace("<p>", "<p class='player-text'>");
-            //self.domText(missed_text);
-
-            messages.push([missed_text, "next"]);
-        }
-        
-        //self._runActionNext = self._runActionTurn.target.h <= 0 ? "target-dead" : undefined; 
-    }
 
     self.effectiveMessage = function (action) {
         if(action.effective == 1) {
@@ -744,151 +603,8 @@
         }
     }
 
-    self.actionIsDead = function (action, messages) {
-        let target_dead = action.target.h <= 0; 
-
-        if(target_dead) {
-            // self.domText(self._pText(self._runActionTurn.user, 
-            //     (self._runActionTurn.target.name || self._runActionTurn.target.id) + " is killed!"
-            //     ) );
-            messages.push([self._pText(self._runActionTurn.user, 
-                (self._runActionTurn.target.name || self._runActionTurn.target.id) + " is killed!"
-                ), ]);
-                
-            if(self._player.h <= 0) {
-                //self._player = self.system.monsters.random();
-                //self._player.name = self._player.id;
-                //approaching = self._player.name;
-                messages.push(self._pText("player", "GAME OVER") );
-            }
-            else {
-                self._enemy = null;
-                //clear 
-                document.querySelector('.right-column').classList.add('hide');
-                //approaching = self._enemy.id;
-
-                messages.push(self._pText("player", "XP gain value goes here.") );
-            }
-        }
-    }
-
-    /**
-     * true is false paramter check for first round development work
-     */
-    self.runActions = function(is_player) {
-        if(!self._runActionNext) {
-            self._runActionTurn = self.actionOrder.shift();
-            if(!self._runActionTurn) {
-                self.system.dom.setDisplay("battle-menu-main");
-                
-                //energy recovery:
-                self.energyRecoveryAuto();
-                self.update();
-                return "menu";
-            }
-            self._runActionNext = "using";
-        }
-        if(self._runActionNext === "battle-over") {
-            self._runActionNext = "";
-            return "menu:menu";
-        }
-        
-        self.system.dom.setDisplay(self.system.dom.elms.output);
-        
-        if(self._runActionNext == "using") {
-            let use_move_txt = lib.func.rp(self.text.attack_used, 
-                {"@a": self._runActionTurn.monster.name || self._runActionTurn.monster.id, "@m": self._runActionTurn.move.n});
-            self.domText(self._pText(self._runActionTurn.user, use_move_txt));
-            
-            //energy cost
-            self._runActionTurn.monster.e -= self._runActionTurn.move.e;
-            
-            self._runActionNext = "hit";
-        }
-        else if(self._runActionNext == "hit") {
-            if(self._runActionTurn.hit) {
-                let hp = self._runActionTurn.target.h;
-                self._runActionTurn.target.h = self._runActionTurn.target.h - self._runActionTurn.damage;
-                
-                self.domText(self._pText(self._runActionTurn.user, "hit"));
-                
-                self.system.sounds.random();
-                
-                if(self._runActionTurn.effective != 1) {
-                    let effect_text = "<span class='effective effective-super'>" + self.text.effective_true + "</span>";
-                    if(self._runActionTurn.effective == 0.5) {
-                        effect_text = "<span class='effective effective-not'>" + self.text.effective_false + "</span>";
-                    }
-                    self.domText(self._pText(self._runActionTurn.user, effect_text));
-                }
-                if(self._runActionTurn.critical) {
-                    let crit_text ="<span class='critical'>" + self.text.critical + "</span>";
-                    self.domText(self._pText(self._runActionTurn.user, crit_text));
-                }
-                
-                if(self.system.settings.battleNumbers) {
-                    self.domText(self._pText(self._runActionTurn.user, "Damage: " + self._runActionTurn.damage));
-                }
-            }
-            else {
-                self.system.sounds.miss();
-                
-                //no hit
-                let missed_text = self.text.missed.replace('@a', self._runActionTurn.monster.name || self._runActionTurn.monster.id);
-                missed_text = self._pText(self._runActionTurn.user, missed_text);
-                //player_text = player_text.replace("<p>", "<p class='player-text'>");
-                self.domText(missed_text );
-            }
-            
-            self._runActionNext = self._runActionTurn.target.h <= 0 ? "target-dead" : undefined; 
-        }
-        else if(self._runActionNext == "target-dead") {
-            //clear actions
-            self.actionOrder = [];
-            
-            self.domText(self._pText(self._runActionTurn.user, 
-                (self._runActionTurn.target.name || self._runActionTurn.target.id) + " is killed!"
-                ) );
-                
-            self._runActionNext = "random-next-monster";
-        }
-        else if(self._runActionNext == "random-next-monster") {
-            // go to ZONE menu
-            
-            let approaching = "";
-            if(self._player.h <= 0) {
-                //self._player = self.system.monsters.random();
-                //self._player.name = self._player.id;
-                //approaching = self._player.name;
-                self.domText(self._pText("player", "GAME OVER") );
-            }
-            else {
-                self._enemy = null;
-                //clear 
-                document.querySelector('.right-column').classList.add('hide');
-                //approaching = self._enemy.id;
-            }
-            
-            
-            self.domText(self._pText("player", "XP gain value goes here.") );
-            self.system.sounds.play(self.system.sounds.types.other.encounter);
-                
-            self._runActionNext = "battle-over";
-        }
-        
-        self.update();
-        return "runActions";
-    };
     
-    self.playersMove = function() {
-        //output is open
-        self.system.dom.setDisplay("battle-menu-main");
-        return "menu";
-    };
     
-    self.playerAction = function(action, value) {
-        return new self.obj.action(action, value);
-    };
     
     /**
      * roll action for enemy

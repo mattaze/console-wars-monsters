@@ -40,7 +40,6 @@ var cw = cw ?? {};
     self.next = function (action, value){
         console.log(`cw.system.next ${action} - ${value}`);
 
-        //sep2024 replace with not using actionNow and next()
         if(self[action]) {
             self[action](value);
         }
@@ -70,6 +69,15 @@ var cw = cw ?? {};
         {id: "items", t: "👜 Items", action:"showItems", value:"Hub"},
         {id: "monsters", t: "👹 Monsters", action:"showMonsters", value:"Hub"},
     ];
+    self.menus.startMenu = [
+        {id: "NewGame", t:"New Game", action:"NewGame", value:""},
+        {id: "loadGame", t: "Load Game", action:"LoadSave", value:""}
+    ];
+    self.menu.loadMenu = [
+        "Game 1",
+        "Game 2",
+        "Game 3"
+    ]
     
     self.menus.goto = {
         "Hub": "GotoHub",
@@ -138,10 +146,38 @@ var cw = cw ?? {};
     self.load = function () {
         self.sounds.backgroundMusic(self.sounds.types.music.battle);
        
-        
-        self.menu.load();
-        self.actionNow = "menu";
+        self.dom.setMenuAndDisplay("action-menu", self.menus.startMenu);
     };
+
+    self.loadGame = function () {
+        let menu = [
+            self.getLoadMenuSlot("cw-save-1"),
+            self.getLoadMenuSlot("cw-save-2"),
+            self.getLoadMenuSlot("cw-save-3"),
+            {id: "mainMenu", t: "Back", action: "load"}
+        ]
+        self.dom.setMenuAndDisplay("action-menu", menu);
+    }
+    self.getLoadMenuSlot = function (name) {
+        let data = localStorage.getItem(name);
+        return {id: name, t: data ? JSON.parse(data).player.name : "no save", d: data ? true : false};
+    }
+
+    self.saveMenu = function () {
+        //todo
+        // show menu, which location to save to
+    };
+
+    /**
+     * save to local storage
+     * @param {string} save_slot 
+     */
+    self.save = function (save_slot) {
+        save_slot = "cw-save-1";
+        //save menu option?
+        localStorage.setItem(save_slot, JSON.stringify(self.system.state.player));
+    };
+
 
     // ######### binding section ####
     window.addEventListener('load', self.load);
@@ -214,32 +250,8 @@ function dic (text) {
         "Game 2",
         "Game 3"
     ]
-    //self.zones = [{ps: "Playstation"}];
-    /*self.hubMenu = [
-        "Nintendo",
-        "Playstation",
-        "XBox",
-        "Other",
-        "Items",
-        "Monsters"
-    ];
-    */
-    /* self.zoneMenu = [
-        "❌ Explore",
-        "⬇️ Take Stairs",
-        "Fight Boss",
-        "Items",
-        "Monsters",
-        "Leave Zone"
-    ]; */
 
 
-    /**
-     * t: text
-     * d: disabled
-    **/
-    //id would attach as data-action on dom
-    
 
     self.nextAction = "hub";
 
@@ -278,6 +290,8 @@ function dic (text) {
     
     self._loaded = false;
     self.load = function () {
+        //REMOVE
+
         if(self._loaded) {
             self.next();
             return;
@@ -402,6 +416,8 @@ function dic (text) {
     }
     
     self.zone = function (action) {
+        console.error("remove this self.zone");
+
         //user doing action in zone  
         if (action === "Explore") {
             //searches= 0 : 10% boss, 5% stairs, 5% item, 15% no encounter
@@ -489,7 +505,7 @@ function dic (text) {
     }
 
     self.save = function () {
-        localStorage.setItem('cw-save-1', JSON.stringify(self.system.state));
+        localStorage.setItem('cw-save-1', JSON.stringify(self.system.state.player));
     }
     
     /**
