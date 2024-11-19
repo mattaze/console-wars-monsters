@@ -340,6 +340,11 @@ var SpriteSheets = {
     }
 };
 
+//Mario kart characters can drop a kart, which is an equippable item
+//mecha are also equip items
+
+
+
 //repeat will run attack again in next round
 //multi will do attack multiple times in one round
 
