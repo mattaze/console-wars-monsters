@@ -256,6 +256,14 @@
         button.dataset.action = action;
         button.dataset.value = value;
     }
+
+    self.messageRollClear = function () {
+        self.system.output.elm.innerHTML = "";
+    }
+
+    self.messageRollSpace = function () {
+        self.system.output.elm.insertAdjacentHTML('beforeend', "<hr />");
+    }
     
     s.closeMessage = function() {
         s.setDisplay(s._messageLastDisplayID);

@@ -142,10 +142,11 @@
     }
 
     /**
+     * any monsters left to fight. But self the Handler/Hunter/Main Player characters, is also fightable
      * @returns {boolean} 
      */
     self.HasBattleReadyMonsters = function () {
-        return self.player.monster.find(mon => mon.h > 0);
+        return self.player.monsters.some(mon => mon.h > 0);
     }
 
 

@@ -73,7 +73,7 @@ var cw = cw ?? {};
         {id: "NewGame", t:"New Game", action:"NewGame", value:""},
         {id: "loadGame", t: "Load Game", action:"LoadSave", value:""}
     ];
-    self.menu.loadMenu = [
+    self.menus.loadMenu = [
         "Game 1",
         "Game 2",
         "Game 3"

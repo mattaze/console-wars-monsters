@@ -59,6 +59,10 @@
         
         document.querySelector('.right-column').classList.remove('hide');
         self.update();
+
+        //clear MessageRoll at start of each new battle.
+        self.system.dom.messageRollClear();
+
         
         //self.system.dom.setDisplay("battle-menu-main");
         
@@ -520,14 +524,14 @@
 
                 // goto 
                 //self.system.dom.messageRollAction(messages[0], "battleActionHit");
+                self.system.dom.messageRollSpace();
                 self.system.battleMenu();
             }
             else {
-                let action = self._currentAction;
+                self._currentAction = action;
                 //self.runActions3(self._actions);
-                let messages = [];
-                self.useAction(action, messages);
-                self.system.dom.messageRollAction(messages[0], "battleActionHit");
+                let message = self.useAction(action);
+                self.system.dom.messageRollAction(message, "battleActionHit");
             }
         }
     }
@@ -547,19 +551,25 @@
 
         if(self._player.h <= 0) {
             let message = "";
+            let action = "";
+
             if(self.system.state.HasBattleReadyMonsters()) {
                 //monster switch TODO
                 //has player character died - then is Game Over.
                 message = "has more monsters, should do monster switch menu, but game over.";
                 //monster switch should allow player character to be selected
+
+                message = self._pText("player", message);
+                self.system.dom.messageRollAction(message, "battleMonsterSwitch", "", "sound option");
             }
             else {
                 message = "out of monsters, "
+                
+                message = self._pText("player", message);
+                self.system.dom.messageRollAction(message, "GameOver", "", "sound option");
             }
 
-            message = self._pText("player", message);
 
-            self.system.dom.messageRollAction(message, "GameOver", "", "sound option");
         }
         else {
             self._enemy = null;
@@ -626,3 +636,27 @@
 
     return self;
 }).apply(cw);
+
+/*
+X Uses Swift Attack
+    hit
+    Not very effective
+    Critical Hit
+Y Uses Slow Attack
+    miss
+[go to BattleMenu]
+
+
+Mario Uses Avoid
+    - regained Energy -> regain a little Enery / regain a lot of Energy (for area bonuses)
+Pika uses attack
+    hit
+    Mario is dead
+
+
+Death and go to Monster Select to swap in.
+
+
+issue: when win second Fight, it error with unknown zone in GetFloorNav
+
+ */
