@@ -177,7 +177,7 @@ g.BossRoom = "BossRoom";
     };
     self.events.random_monster = function (zone_id, floor) {
         return ["you have encountered a <span class='danger-text'> MONSTER " + self.system.monsters.randomEmoji()+ "'</span>"
-            ,"startBattle", "0"];
+            ,"battle.start", "0"];
     };
     self.events.item_found = function (zone_id, floor) {
         let item = self.system.items.FindItem(zone_id, floor.id);

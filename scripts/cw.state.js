@@ -149,6 +149,20 @@
         return self.player.monsters.some(mon => mon.h > 0);
     }
 
+    /**
+     * get nav for show monsters, with action on click passed in
+     * @param {string} on_click_action 
+     * @param {Array} [nav]
+     */
+    self.getShowMonstersNav = function (on_click_action, nav) {
+        let nav = nav ?? [];;
+        self.player.monsters.forEach(mon => nav.push({t:mon.name, action: on_click_action, value: mon.uid, callfrom: "unknown"}));
+        
+    }
+
+    self.getMonster = function (uid) {
+        return self.player.monsters.find(mon => mon.uid == uid);
+    }
 
     return self;
 }).apply(cw);

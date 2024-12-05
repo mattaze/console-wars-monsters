@@ -60,7 +60,7 @@ lib.objectToHTML = function (js_object, element) {
 // lib.dom.set = function ()
 
 /**
- * get object by string
+ * get object by string, "name.action"
  * @param {Object} o object for attribute
  * @param {String} s dot notation to attribute
  */

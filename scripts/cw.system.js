@@ -40,7 +40,11 @@ var cw = cw ?? {};
     self.next = function (action, value){
         console.log(`cw.system.next ${action} - ${value}`);
 
-        if(self[action]) {
+        let func =  lib.byString(self,action);
+        if(func) {
+            func(value);
+        }
+        else if(self[action]) {
             self[action](value);
         }
         else {
@@ -112,7 +116,7 @@ var cw = cw ?? {};
         
         //{id: "Leave Zone", t: "🔙 Leave Zone", action: "Goto", value: "Hub" }
         let nav = [{ t: "🔙 Back", action: "Goto", value: callfrom }];
-        self.state.player.monsters.forEach(mon => nav.push({t:mon.name, action: "showMonster", value: mon.uid, callfrom: callfrom}));
+        self.state.getShowMonstersNav("showMonster", nav);
         
         self.dom.setMenuAndDisplay("action-menu", nav);
     };

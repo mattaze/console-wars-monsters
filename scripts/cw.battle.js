@@ -6,45 +6,33 @@
 
     self.menus = {};
     self.menus.battleMenu = [
-        {id: "battleMenu", t: "🤺 Attack", action: "battleAttacksMenu", value: ""},
+        {id: "attacksMenu", t: "🤺 Attack", action: "battle.attacksMenu", value: ""},
         {id: "Items", t: "👜 Items", action:"ShowItems", value:"Zone"},
-        {id: "Monsters", t: "👹 Monsters", action:"ShowMonsters", value:"Zone"},
+        {id: "Monsters", t: "👹 Monsters", action:"battle.ShowMonsters", value:"Zone"},
         {id: "Leave Zone", t: "🏃‍♂️ Run", action: "BattleRun", value: "", disabled: false }
     ];
     
     
     // 2024 function
-    self.system.startBattle = function (val) {
+    self.start = function (val) {
         self.load();
-
-
-        //self.message(true, , "battleMenu")
-
-        self.system.dom.messageAction(self._enemy.id + " approaches!", "battleMenu");
+        self.system.dom.messageAction(self._enemy.id + " approaches!", "battle.menu");
     }
 
-    self.system.battleMenu = function (val) {
+    self.menu = function (val) {
         nav = self.menus.battleMenu;
         self.system.dom.setMenuAndDisplay("action-menu", nav);
     }
-    self.system.battleAttacksMenu = function () {
-        let nav = self._player.am.map(move => 
-        {
-            let move_info = self.getMoveInfo(self._player, move);
-            return {t: move_info.name + "(⚡+ " + move_info.e + ")", 
-                action: "battleAttack", value: move, disabled: !self.attackCheck(move) }
-        });
 
-        nav.push({t: "🔙 Back", action: "battleMenu"});
+    self.attacksMenu = function () {
+        let nav = self.system.monsters.getMonsterMovesNav(self._player, "battle.attack", "unknown");
+
+        nav.push({t: "🔙 Back", action: "battle.menu"});
         self.system.dom.setMenuAndDisplay("action-menu", nav);
         //self.system.dom.setMenu('battle-menu-attack', self._player.am);
     }
 
-    self.system.battleAttack = function (move) {
-        self.attack(move);
-    }
-
-
+    
     /**
      * start battle
      */
@@ -63,16 +51,7 @@
         //clear MessageRoll at start of each new battle.
         self.system.dom.messageRollClear();
 
-        
-        //self.system.dom.setDisplay("battle-menu-main");
-        
         self.system.sounds.play(self.system.sounds.types.other.encounter);
-        
-        //self.nextAction = "message";
-        //return self.message(true, self._enemy.id + " approaches!", "menu");
-        
-        //set menu
-        //self.nextAction = "menu";
     };
 
 
@@ -121,15 +100,6 @@
         else {
             //return true if battle is over.
             return ;
-        }
-    };
-    self.menu = function(action) {
-        
-        if(action) {
-            //attack
-            self.system.dom.setMenu('battle-menu-attack', self._player.am);
-            self.system.dom.setDisplay('battle-menu-attack');
-            return "attack";
         }
     };
 
@@ -525,7 +495,7 @@
                 // goto 
                 //self.system.dom.messageRollAction(messages[0], "battleActionHit");
                 self.system.dom.messageRollSpace();
-                self.system.battleMenu();
+                self.system.menu();
             }
             else {
                 self._currentAction = action;
@@ -633,6 +603,42 @@
         this.action = action;
         this.value = value;
     };
+
+
+    //
+    self.ShowMonsters = function () {
+        let back = { t: "🔙 Back", action: "battle.menu", keycode: "Backspace,Escape"};
+        let nav = self.system.state.getShowMonstersNav("battle.showMonster");
+        nav.unshift(back);
+
+        self.dom.setMenuAndDisplay("action-menu", nav);
+    }
+
+    self.showMonster = function (uid) {
+        //Show monster info
+        let monster = cw.state.getMonster(uid);
+
+
+        let nav = [
+            { t: "⚔️ Moves", action: "battle.ShowMonsterMoves", value: uid},
+            { t: "↔️ SWITCH", action: "battle.SwitchMonster", value: uid},
+            { t: "🔙 BACK", action: "battle.ShowMonsters", keycode: "Backspace,Escape"}
+        ]
+    }
+
+    self.SwapMonster = function (uid) {
+        let monster = cw.state.getMonster(uid);
+
+        console.error("battle swapMonster TODO - : " + uid);
+    }
+    self.ShowMonsterMoves = function (uid) {
+        let monster = cw.state.getMonster(uid);
+
+        let nav = self.system.monsters.getMonsterMovesNav(monster, "battle.attack", "unknown");
+        nav.unshift({ t: "🔙 BACK", action: "battle.ShowMonster", value: uid, keycode: "Backspace,Escape"});
+
+        console.log("todo: showMonsterMoves")
+    }
 
     return self;
 }).apply(cw);

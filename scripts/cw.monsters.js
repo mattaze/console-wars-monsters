@@ -81,6 +81,34 @@
         //am => attacks
     };
 
+    self.getMonsterMovesNav = function (monster, action, callback) {
+        let nav = monster.am.map(move => {
+            let move_info = self.getMove(monster, move);
+            return {t: move_info.name + "(⚡+ " + move_info.e + ")", 
+                action: action, value: move, disabled: !self.attackCheck(move), callback: callback }
+        });
+
+        return nav;
+    }
+
+    self.getMove = function (monster, move) {
+        if(typeof move !== "string") {
+            return move;
+        }
+        
+        let found = monster.am.find(function(attack_move) {
+            if(attack_move.name) {
+                return attack_move.name == attack_move;
+            }
+            return false;
+        });
+        if(!found) {
+            found = attacks[move];
+        }
+        found.n = move;
+        return found;
+    }
+
     return self;
 }).apply(cw);
 //}).apply(cw.monsters = {});
