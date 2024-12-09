@@ -628,8 +628,11 @@
 
     self.SwapMonster = function (uid) {
         let monster = cw.state.getMonster(uid);
+        self._player = monster;
 
-        console.error("battle swapMonster TODO - : " + uid);
+        //console.error("battle swapMonster TODO - : " + uid);
+
+        self.update();
     }
     self.ShowMonsterMoves = function (uid) {
         let monster = cw.state.getMonster(uid);
